@@ -62,10 +62,153 @@
 
 
 ## 1. What is Angular, and how does it differ from AngularJS?
+
+**Angular** is a platform and framework for building single-page client applications using HTML, CSS, and TypeScript. Angular is developed and maintained by Google and is often referred to as Angular 2+ or simply Angular to distinguish it from its predecessor, AngularJS.
+
+**AngularJS**, on the other hand, is the original version of Angular, which is based on JavaScript and was released in 2010.
+
+### Differences:
+
+- **Language**: Angular uses TypeScript, while AngularJS uses JavaScript.
+- **Architecture**: Angular has a component-based architecture, whereas AngularJS uses a scope and controller model. 
+- **Performance**: Angular provides better performance with improved dependency injection and change detection mechanisms. 
+- **Mobile Support**: Angular is designed with mobile support in mind, whereas AngularJS is not. 
+- **Tooling**: Angular comes with advanced tooling and CLI for efficient development, whereas AngularJS has more basic tooling.
+
+### Example:
+
+- **Angular (TypeScript):**
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  template: '<h1>Hello, Angular!</h1>',
+})
+export class AppComponent {}
+```
+
+- **AngularJS (JavaScript):**
+
+```javascript
+angular.module('myApp', [])
+  .controller('myController', function($scope) {
+    $scope.message = 'Hello, AngularJS!';
+  });
+```
+
 ## 2. Explain the architecture of an Angular application.
+
+An Angular application is structured as a collection of modules, components, and services.
+
+### Architecture:
+
+- **Modules**: The fundamental building blocks. An Angular app typically has a root module and feature modules. 
+- **Components**: Define views using HTML templates. Every component has a TypeScript class, HTML template, and styles. 
+- **Templates**: Define the view and use directives and binding markup to connect the DOM with the component. 
+- **Services**: Provide business logic and data access. They are typically injected into components. 
+- **Dependency Injection (DI)**: Angular uses DI to provide components with the services they need.
+
+### Example:
+A simple Angular module with a component and a service:
+```typescript
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+import { DataService } from './data.service';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule],
+  providers: [DataService],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}
+```
+
 ## 3. What are Angular modules, and why are they important? Describe the role of NgModule in Angular.
+
+Angular modules are a way to organize an application and manage dependencies. They help encapsulate components, directives, pipes, and services, making the code more modular and maintainable.
+
+NgModule is a decorator that marks a class as an Angular module and provides metadata about the module.
+
+### Importance:
+
+- **Organization**: Modules group related components and services. 
+- **Reusability**: Modules can be reused across different parts of an application or even different applications. 
+- **Dependency Management**: Modules manage service instances and dependencies.
+
 ## 4. What is a component in Angular?
-## 5. How do you create a new component in Angular?
+
+A component in Angular is a building block for the UI, consisting of a TypeScript class, an HTML template, and optionally, styles.
+
+### Example:
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-hello',
+  template: '<h1>Hello, {{name}}!</h1>',
+  styles: ['h1 { color: blue; }']
+})
+export class HelloComponent {
+  name: string = 'World';
+}
+```
+
+## 5. How do you create a new component, service, pipe and directive in Angular? What other options are available for generating code in Angular?
+
+In Angular, creating new components, services, pipes, and directives can be done using the Angular CLI (Command Line Interface). Below are the steps and commands for each:
+
+**1. Creating a New Component:**
+
+To create a new component, use the following command:
+
+```bash
+ng generate component component-name
+```
+
+or shorthand: 
+
+```bash
+ng g c component-name
+```
+
+This command will generate a new folder named `component-name` containing the component's **TypeScript**, **HTML**, **CSS**, and **spec** files.
+
+**2. Creating a New Service:**
+
+To create a new service, use the following command:
+
+```bash
+ng generate service service-name
+```
+
+or shorthand: 
+
+```bash
+ng g s service-name
+```
+
+This command will generate a service-name.service.ts file with a basic service class and a spec file for testing.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## 6. Explain data binding in Angular. What are the different types of data binding in Angular?
 ## 7. How do you implement two-way data binding in Angular?
 ## 8. What are services in Angular? How do you create and inject a service in Angular?
