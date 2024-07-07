@@ -331,8 +331,89 @@ Data binding in Angular is a core concept that allows for the synchronization of
         ```html
         <input [(ngModel)]="username">
         ```
+Data binding in Angular ensures that the model and view stay in sync, providing a dynamic and responsive user experience. The different types of data binding cater to various needs, from simple one-way binding (from TS to HTML) to complex two-way data binding (both ways), offering a flexible and powerful way to build interactive applications.
 
 ## 7. How do you implement two-way data binding in Angular?
+
+Two-way data binding in Angular allows for the synchronization of data between the component's class (the model) and the template (the view). This means that when data in the model changes, the view is automatically updated, and when data in the view changes (e.g., through user input), the model is updated as well.
+
+To implement two-way data binding in Angular, you typically use the ngModel directive. Here's a step-by-step guide:
+
+### 1. Install FormsModule:
+
+Ensure that FormsModule is imported into your Angular module. FormsModule provides the necessary directives and services to work with forms in Angular, including ngModel.
+
+```typescript
+// app.module.ts
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms'; // Import FormsModule
+
+import { AppComponent } from './app.component';
+
+@NgModule({
+     declarations: [
+          AppComponent
+     ],
+     imports: [
+          BrowserModule,
+          FormsModule // Include FormsModule in imports array
+     ],
+     providers: [],
+     bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
+
+### 2. Use ngModel in Template:
+
+Use the ngModel directive in your template to bind the form control (e.g., an input element) to a property in your component's class. This creates two-way data binding.
+    
+```html
+<!-- app.component.html -->
+<input [(ngModel)]="username" placeholder="Enter your username">
+<p>Your username is: {{ username }}</p>
+```
+
+### 3. Define the Bound Property in the Component:
+
+Define the property in your component's class that will be bound to the form control.
+
+```typescript
+// app.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+     selector: 'app-root',
+     templateUrl: './app.component.html',
+     styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+     username: string = ''; // Define the property
+}
+```
+
+### 4. If you are using standalone component, you can import FormsModule directly in the component.
+    
+```typescript
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+     selector: 'app-standalone',
+     standalone: true,
+     imports: [FormsModule], // Import FormsModule directly
+     template: `
+    <input [(ngModel)]="username" placeholder="Enter your username">
+    <p>Your username is: {{ username }}</p>
+  `,
+     styleUrls: ['./standalone.component.css']
+})
+export class StandaloneComponent {
+     username: string = ''; // Define the property
+}
+```
+
 ## 8. What are services in Angular? How do you create and inject a service in Angular?
 ## 9. Explain dependency injection in Angular.
 ## 10. What is an Angular directive? Differentiate between structural and attribute directives.
