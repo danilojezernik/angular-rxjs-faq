@@ -265,18 +265,73 @@ To create a new environment file, use the following command:
 ```bash
 ng generate environments environment-name
 ```
-
-
-
-
-
-
-
-
-
-
-
 ## 6. Explain data binding in Angular. What are the different types of data binding in Angular?
+
+Data binding in Angular is a core concept that allows for the synchronization of data between the component's class (the model) and its template (the view). This means that when data in the model changes, the view is automatically updated, and when data in the view changes, the model is updated as well. Angular provides different ways to achieve this synchronization through various types of data binding.
+
+### 1. Interpolation (One-Way Data Binding):
+   - **Syntax**: `{{ expression }}`
+   - **Direction**: From TypeScript (TS) to HTML.
+   - **Description**: Interpolation allows you to embed expressions in the template. Angular evaluates these expressions and inserts the resulting text into the HTML. This type of data binding is unidirectional, meaning it only goes from the component class to the view.
+   - **Example**:
+        ```html
+        <h1>{{ title }}</h1>
+        ```
+     
+### 2. Property Binding (One-Way Data Binding):
+   - **Syntax**: `[property]="expression"`
+   - **Direction**: From TypeScript (TS) to HTML.
+   - **Description**: Property binding is used to bind the value of a component's property to an element's property in the view. It updates the view whenever the data in the component changes.
+   - **Example**:
+        ```html
+        <img [src]="imageUrl">
+        ```
+     
+### 3. Attribute Binding (One-Way Data Binding):
+   - **Syntax**: `[attr.attributeName]="expression"`
+   - **Direction**: From TypeScript (TS) to HTML.
+   - **Description**: Attribute binding is similar to property binding but is used to bind attributes that are not native properties of an HTML element.
+   - **Example**:
+        ```html
+        <button [attr.aria-label]="buttonLabel">Click me</button>
+        ```
+     
+### 4. Class Binding (One-Way Data Binding):
+   - **Syntax**: `[class.className]="expression"`
+   - **Direction**: From TypeScript (TS) to HTML.
+   - **Description**: Class binding allows you to conditionally add or remove CSS classes based on the value of an expression in the component.
+   - **Example**:
+        ```html
+        <div [class.error]="isError">Error message</div>
+        ```
+     
+### 5. Style Binding (One-Way Data Binding):
+   - **Syntax**: `[style.styleProperty]="expression"`
+   - **Direction**: From TypeScript (TS) to HTML 
+   - **Description**: Style binding is used to set inline styles for an element based on the evaluation of an expression.
+   - **Example**:
+        ```html
+        <div [style.backgroundColor]="bgColor">Content</div>
+        ```
+
+### 6. Event Binding (One-Way Data Binding):
+   - **Syntax**: `(event)="handler"`
+   - **Direction**: From HTML to TypeScript (TS).
+   - **Description**: Event binding allows you to listen to events triggered by the user in the view (e.g., click, input, etc.) and execute a function in the component.
+   - **Example**:
+        ```html
+        <button (click)="onClick()">Click me</button>
+        ```
+
+### 7. Two-Way Data Binding:
+   - **Syntax**: `[(ngModel)]="property"`
+   - **Direction**: Both ways - from TypeScript (TS) to HTML and from HTML to TypeScript (TS).
+   - **Description**: Two-way data binding combines property binding and event binding. It allows for a bidirectional exchange of data between the component and the view, meaning changes in the view are reflected in the model and vice versa. This is commonly used with form elements.
+   - **Example**:
+        ```html
+        <input [(ngModel)]="username">
+        ```
+
 ## 7. How do you implement two-way data binding in Angular?
 ## 8. What are services in Angular? How do you create and inject a service in Angular?
 ## 9. Explain dependency injection in Angular.
