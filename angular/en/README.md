@@ -162,7 +162,7 @@ export class HelloComponent {
 
 In Angular, creating new components, services, pipes, and directives can be done using the Angular CLI (Command Line Interface). Below are the steps and commands for each:
 
-**1. Creating a New Component:**
+### **1. Component:**
 
 To create a new component, use the following command:
 
@@ -178,7 +178,15 @@ ng g c component-name
 
 This command will generate a new folder named `component-name` containing the component's **TypeScript**, **HTML**, **CSS**, and **spec** files.
 
-**2. Creating a New Service:**
+Additional options:
+
+- `--skip-tests`:  Skip generating spec files.
+- `--standalone`: Generate a standalone component without a folder.
+- `--style none`: Generate a component without styles.
+- `--change-detection OnPush`: Set the change detection strategy to OnPush.
+- `--view-encapsulation None | Emulated | ShadowDom`: Set the view encapsulation.
+
+### **2. Service:**
 
 To create a new service, use the following command:
 
@@ -194,10 +202,69 @@ ng g s service-name
 
 This command will generate a service-name.service.ts file with a basic service class and a spec file for testing.
 
+### **3. Pipe:**
 
+To create a new pipe, use the following command:
 
+```bash
+ng generate pipe pipe-name
+```
 
+or shorthand: 
 
+```bash
+ng g p pipe-name
+```
+
+### **4. Directive**
+
+To create a new directive, use the following command:
+
+```bash
+ng generate directive directive-name
+```
+
+or shorthand: 
+
+```bash
+ng g d directive-name
+```
+
+### **5. Enum:**
+
+To create a new enum, use the following command:
+
+```bash
+ng generate enum enum-name
+``` 
+
+or shorthand: 
+
+```bash
+ng g e enum-name
+```
+
+### 6. **Interface**
+
+To create a new interface, use the following command:
+
+```bash
+ng generate interface interface-name
+```
+
+or shorthand: 
+
+```bash
+ng g i interface-name
+```
+
+### 7. **Environments**
+
+To create a new environment file, use the following command:
+
+```bash
+ng generate environments environment-name
+```
 
 
 
@@ -214,12 +281,12 @@ This command will generate a service-name.service.ts file with a basic service c
 ## 8. What are services in Angular? How do you create and inject a service in Angular?
 ## 9. Explain dependency injection in Angular.
 ## 10. What is an Angular directive? Differentiate between structural and attribute directives.
-## 11. How do you create a custom directive in Angular?
+## 11. How do you create a custom directive in Angular? Create a directive that changes the background of an element.
 ## 12. What is Angular CLI, and how is it used?
 ## 13. Explain the purpose of the @NgModule decorator.
-## 14. What are Angular pipes, and how do you use them? How do you create a custom pipe in Angular?
-## 15. What is Angular routing? How do you set up routing in an Angular application?
-## 16. Explain lazy loading in Angular.
+## 14. What are Angular pipes, and how do you use them? How do you create a custom pipe in Angular? How do you implement a custom pipe that accepts multiple parameters?
+## 15. How to handle errors in async pipe in Angular? How to fix null in async pipe error?
+## 16. What is Angular routing? How do you set up routing in an Angular application?
 ## 17. What is a guard in Angular routing, and how do you implement it?
 ## 18. What are Angular forms? Differentiate between template-driven and reactive forms in Angular.
 ## 19. How do you implement form validation in Angular?
@@ -231,7 +298,7 @@ This command will generate a service-name.service.ts file with a basic service c
 ## 25. What is the purpose of Angular Elements?
 ## 26. Explain the change detection mechanism in Angular.
 ## 27. How do you optimize the performance of an Angular application?
-## 28. What are Angular interceptors, and how do you use them?
+## 28. What are Angular interceptors, and how do you use them? Write an example of an interceptor
 ## 29. How do you use environment variables in Angular?
 ## 30. What is AOT (Ahead-Of-Time) compilation in Angular? Explain the difference between AOT (Ahead-Of-Time) and JIT (Just-In-Time) compilation.
 ## 31. Explain the role of the ngOnInit lifecycle hook. What are the different lifecycle hooks in Angular?
@@ -244,23 +311,136 @@ This command will generate a service-name.service.ts file with a basic service c
 ## 38. Explain the purpose of Angular decorators.
 ## 39. How do you handle state management in Angular applications?
 ## 40. What is the purpose of the APP_INITIALIZER token in Angular?
-## 41. How do you implement a custom form control in Angular?
 ## 42. What is a feature module in Angular, and how do you use it?
 ## 43. Explain how Angular handles change detection.
-## 44. How do you implement a custom pipe that accepts multiple parameters?
 ## 45. Explain the difference between an Angular module and a JavaScript module.
 ## 46. How do you secure an Angular application?
-## 47. Explain how you can lazy load components and modules in Angular.
-## 48. What are Angular schematics, and how are they used?
-## 49. Explain how to use Angular with Web Workers.
-## 50. How do you create a dynamic component in Angular?
-## 51. How do you use dependency injection tokens in Angular?
-## 52. What is the role of NgZone in Angular?
-## 53. How do you handle memory leaks in Angular applications?
-## 54. Explain the concept of control value accessor in Angular.
-## 55. How do you create a custom decorator in Angular?
-## 56. What are Angular resolvers, and how do you use them?
-## 57. How do you handle route guards with complex conditions?
-## 58. Explain the use of forwardRef in Angular.
-## 59. How do you set up an Angular application to use service workers for offline capabilities?
-## 60. How do you implement internationalization (i18n) in Angular?
+## 47. Explain lazy loading in Angular and how you can lazy load components and modules in Angular and what are the benefits of lazy loading?
+## 48. Write an example of how to inject a module with some configuration using forRoot
+## 49. What are Angular schematics, and how are they used?
+## 50. Explain how to use Angular with Web Workers.
+## 51. How do you create a dynamic component in Angular?
+## 52. How do you use dependency injection tokens in Angular?
+## 53. What is the role of NgZone in Angular?
+## 54. How do you handle memory leaks in Angular applications?
+## 55. Explain the concept of control value accessor in Angular.
+## 56. How do you create a custom decorator in Angular?
+## 57. What are Angular resolvers, and how do you use them?
+## 57. What are Angular guards? Write an example of code to protect a route with both sync and async ways.
+## 59. Explain the use of forwardRef in Angular.
+## 60. How do you set up an Angular application to use service workers for offline capabilities?
+## 61. How do you implement internationalization (i18n) in Angular?
+## 62. What is the role of ViewChild and ContentChild in Angular? How to access the child component from parent component with ViewChild? What is the difference between ContentChild & ContentChildren? Compare ng-Content, ViewChild, ViewChildren, ContentChild & ContentChildren?
+## 63. Create a UsersService and getUsers method to make a GET request to http://localhost:3004/users and return a users stream. Write the code to get this data in a component.
+## 64. Write an example of how to inject a module with some configuration using forRoot.
+## 65. What is unsubscribe in Angular? Why is it important? What are the ways to unsubscribe?
+## 66. What is change detection? How does onPush work? Why is onPush important?
+## 67. What is Angular SSR (Server-Side Rendering)? What are the pros and cons of SSR?
+## 68. How to use standalone components in Angular? What are the benefits?
+## 69. How to use Angular signals? What are the benefits?
+## 70. How to fix Angular input has no initializer error?
+## 71. What is NgRx? How does it work? Are you familiar with Redux or NgRx?
+## 72. When to use Angular animations instead of CSS animations? How to animate a button click event to fade in/out a block?
+## 73. What is ng-container, ng-template, ng-content, and ng-template-outlet?
+
+
+## 1. What is Angular, and how  it differ from AngularJS?
+## 2. What are Angular advantages?
+## 3. What is NPM?
+## 4. What is Angular CLI, and how is it used?
+## 5. What is Typescript? What are the advantages of Typescript over Javascript?
+## 6. Where to store static files in an Angular project?
+## 7. What is the role of angular.json file in Angular?
+## 8. Explain the architecture of an Angular application.
+## 10. What are Components in Angular?
+## 11. What is a Selector and Template?
+## 12. What is Module in Angular? What is app.module.ts file?
+## 13. How an Angular App gets Loaded and Started? What are index.html, app-root, selector, and main.ts?
+## 14. What is a Bootstrapped Module & Bootstrapped Component?
+## 15. What are Angular modules, and why are they important? Describe the role of NgModule in Angular.
+## 16. What is a component in Angular?
+## 17. How do you create a new component in Angular?
+## 18. Explain data binding in Angular. What are the different types of data binding in Angular?
+## 19. What is String Interpolation in Angular?
+## 20. What are services in Angular? How do you create and inject a service in Angular? Explain with an example!
+## 21. What is Hierarchical Dependency Injection?
+## 22. What is Provider in Angular?
+## 23. What is the role of @Injectable Decorator in a Service?
+## 24. Explain dependency injection in Angular. How does dependency injection work?
+## 26. What is an Angular directive? Differentiate between structural and attribute directives and how do you create them?
+## 106. What is ng-container, ng-template, ng-content, and ng-template-outlet?
+## 27. What are Angular pipes, and how do you use them? How do you create a custom pipe in Angular?
+## 28. Explain what lazy loading is in Angular and how you can lazy load components and modules in Angular. What are the benefits?
+## 29. What is Angular routing? How do you set up routing in an Angular application?
+## 30. How do you add routing to an Angular application? When can global routing be bad? What is router-outlet? How do you create a router link?
+## 31. What is a guard in Angular routing, and how do you implement it?
+## 32. What are lifecycle hooks in Angular? When are they called?
+## 33. What is a Constructor in Angular?
+## 34. What is ngOnChanges lifecycle hook in Angular?
+## 35. What is ngOnInit lifecycle hook in Angular? What is the difference between constructor and ngOnInit?
+## 37. What are Parent-Child Components?
+## 36. How do you handle component communication in Angular?
+## 40. What are the various ways to communicate between the components?
+## 42. What is Template Reference Variable in Angular?
+## 43. What is the role of ViewChild in Angular? How to access the child component from parent component with ViewChild?
+## 45. What is ContentChild? What is the difference between ContentChild & ContentChildren? Compare ng-Content, ViewChild, ViewChildren, ContentChild & ContentChildren?
+## 48. How do you use the Renderer2 service in Angular?
+## 49. What is Angular Ivy? How does it improve the Angular framework?
+## 50. Explain the purpose of Angular decorators and how do you create them?
+## 51. How do you test an Angular application?
+## 52. What are the best practices for structuring an Angular project?
+## 53. How do you handle state management in Angular applications?
+## 54. What is the purpose of the APP_INITIALIZER token in Angular?
+## 55. How do you implement a custom form control in Angular?
+## 56. What is a feature module in Angular, and how do you use it?
+## 57. Explain how Angular handles change detection.
+## 58. How do you implement a custom pipe that accepts multiple parameters?
+## 59. Explain the difference between an Angular module and a JavaScript module.
+## 60. How do you secure an Angular application?
+## 61. What are Angular schematics, and how are they used?
+## 62. Explain how to use Angular with Web Workers.
+## 63. How do you create a dynamic component in Angular?
+## 64. How do you use dependency injection tokens in Angular?
+## 65. What is the role of NgZone in Angular?
+## 66. How to execute code outside Angular change detection using ngZone? When does it make sense? Write a small example.
+## 67. How do you handle memory leaks in Angular applications?
+## 68. Explain the concept of control value accessor in Angular.
+## 70. What are Angular resolvers, and how do you use them?
+## 71. How do you handle route guards with complex conditions?
+## 72. Explain the use of forwardRef in Angular.
+## 73. How do you set up an Angular application to use service workers for offline capabilities?
+## 74. How do you implement internationalization (i18n) in Angular?
+## 75. What is Authentication & Authorization in Angular?
+## 76. What is JWT Token Authentication in Angular?
+## 77. How to Mock or Fake an API for JWT Authentication?
+## 78. How to implement the Authentication with JWT in Angular?
+## 79. What is Auth Guard?
+## 80. What is HTTP Interceptor? Write an example of an interceptor.
+## 81. How to Retry automatically if there is an error response from API?
+## 82. What are the parts of JWT Token?
+## 83. What is Postman?
+## 84. Which part of the request has the token stored when sending to API?
+## 85. What are Angular Forms? What are the type of Angular Forms?
+## 86. What is the difference between Template Driven Forms & Reactive Forms?
+## 87. How to setup Template Driven Forms?
+## 88. How to apply Required field validation in template driven forms?
+## 89. What is Form Group and Form Control in Angular?
+## 90. How to setup Reactive Forms?
+## 91. How to do validations in reactive forms?
+## 92. What is AOT (Ahead-Of-Time) compilation in Angular? Explain the difference between AOT (Ahead-Of-Time) and JIT (Just-In-Time) compilation.
+## 93. How to use environment variables in Angular?
+## 95. What ways of binding data exist in Angular? Provide examples.
+## 96. Write a DatesService with methods getTomorrow(), getYesterday(), getToday().
+## 97. Why is it bad to call a function in an Angular template?
+## 98. What is Angular generator? How to use generators?
+## 99. What are Angular guards? Write an example of code to protect a route with both sync and async ways.
+## 100. Write an example of how to inject a module with some configuration using forRoot.
+## 101. What is as keyword in Angular? What does it do? Did you use it with combineLatest?
+## 104. Create a directive that changes the background of an element.
+## 105. How do pipes in Angular work? What built-in pipes do you know? Create a simple pipe.
+## 107. How do Angular forms work? What forms are available in Angular? How do they differ?
+## 108. How to fix Angular input has no initializer error?
+## 109. What is NgRx? How does it work? Are you familiar with Redux or NgRx?
+## 110. How to use inject in Angular? What are the benefits?
+## 111. How to use standalone components in Angular? What are the benefits?
+## 112. How to use Angular signals? What are the benefits?
