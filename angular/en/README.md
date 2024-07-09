@@ -693,8 +693,10 @@ Angular provides three main types of directives:
 
 **Examples**:
 
-### `ngClass` 
-is an Angular directive used to dynamically add or remove CSS classes on an HTML element based on certain conditions or expressions. This allows you to apply different styles to elements depending on the state of your application.
+### `ngClass`
+
+is an Angular directive used to dynamically add or remove CSS classes on an HTML element based on certain conditions or
+expressions. This allows you to apply different styles to elements depending on the state of your application.
 
 ```html
 
@@ -741,10 +743,13 @@ export class AppComponent {
 In this example, when isActive is true, the div will have a green background with white text. If isDisabled is true, the
 div will have a gray background with dark gray text.
 
-### `ngStyle` 
-Is an Angular directive that allows you to set inline styles for an HTML element dynamically based on expressions. This is useful for applying styles that are computed or based on dynamic values.
+### `ngStyle`
+
+Is an Angular directive that allows you to set inline styles for an HTML element dynamically based on expressions. This
+is useful for applying styles that are computed or based on dynamic values.
 
 ```html
+
 <div [ngStyle]="{ 'color': textColor, 'font-size': fontSize }">Styled Content</div>
 ```
 
@@ -771,18 +776,22 @@ export class AppComponent {
 ```
 
 #### Combining `ngClass` and `ngStyle`
+
 You can use both ngClass and ngStyle together to apply dynamic classes and styles to an element.
 
 **Example usage:**
+
 ```html
 <!-- HTML Template -->
 <div
-[ngClass]="{ 'active': isActive, 'disabled': isDisabled }"
-[ngStyle]="{ 'color': textColor, 'font-size': fontSize }">
-Styled and Classed Content
+        [ngClass]="{ 'active': isActive, 'disabled': isDisabled }"
+        [ngStyle]="{ 'color': textColor, 'font-size': fontSize }">
+    Styled and Classed Content
 </div>
 ```
+
 **Example Component:**
+
 ```typescript
 // app.component.ts
 import { Component } from '@angular/core';
@@ -790,7 +799,7 @@ import { Component } from '@angular/core';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css']
+    styleUrls: [ './app.component.css' ]
 })
 export class AppComponent {
     isActive: boolean = true;
@@ -799,7 +808,9 @@ export class AppComponent {
     fontSize: string = '20px';
 }
 ```
+
 **CSS:**
+
 ```css
 /* app.component.css */
 .active {
@@ -813,13 +824,15 @@ export class AppComponent {
 }
 ```
 
-In this combined example, the div will have the blue text with a font size of 20 pixels, and if isActive is true, it will have a green background with white text. If isDisabled is true, it will have a gray background with dark gray text.
+In this combined example, the div will have the blue text with a font size of 20 pixels, and if isActive is true, it
+will have a green background with white text. If isDisabled is true, it will have a gray background with dark gray text.
 
 ### Custom Attribute Directive:
 
 - **Description**: Change the appearance or behavior of an element.
 
 **Example**: Highlight Directive
+
 ```typescript
 import { Directive, ElementRef, HostListener } from '@angular/core';
 
@@ -843,7 +856,9 @@ export class HighlightDirective {
     }
 }
 ```
+
 **Usage:**
+
 ```html
 <p appHighlight>Highlight me!</p>
 ```
@@ -858,19 +873,363 @@ export class HighlightDirective {
 Understanding the difference between these directives is essential for effectively manipulating the DOM and enhancing
 the interactivity and appearance of Angular applications.
 
-## 11. How do you create a custom directive in Angular? Create a directive that changes the background of an element.
-
-## 12. What is Angular CLI, and how is it used?
-
-## 13. Explain the purpose of the @NgModule decorator.
-
 ## 14. What are Angular pipes, and how do you use them? How do you create a custom pipe in Angular? How do you implement a custom pipe that accepts multiple parameters?
+
+Angular pipes are a feature in Angular that allows you to transform data in your templates. Pipes are used to format
+strings, currency amounts, dates, and other display data. Angular comes with several built-in pipes, such
+as `DatePipe`, `UpperCasePipe`, `LowerCasePipe`, `CurrencyPipe`, and `PercentPipe`.
+
+### Usage of Built-in Pipes.
+
+To use a pipe, you apply it within the double curly braces `{{ }}` in your template, using pipe operator `|`
+
+#### Example:
+
+```html
+<p>{{ currentDate | date:'short' }}</p>
+<p>{{ amount | currency:'USD' }}</p>
+<p>{{ message | uppercase }}</p>
+```
+
+### Creating a Costume Pipe
+
+To create a custom pipe in Angular, you need to do the following:
+
+1. Generate a Pipe: You can generate a pipe using Angular CLI with the command `ng generate pipe pipeName`. With this
+   command you will also update your module.
+2. Define the Pipe: Implement the Pipe in the generated file
+
+#### Example:
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+    name: 'exponentialStrength'
+})
+export class ExponentalStrengthPipe implements PipeTransform {
+    transform(value: number, exponenet: number = 1): number {
+        return Math.pow(value, exponenet);
+    }
+}
+```
+
+3. Use the Pipe: You can use the custom pipe in your template by applying it with the pipe operator `|`.
+
+#### Example:
+
+```html
+<p>{{ 2 | exponentialStrength: 10 }}</p> <!-- Outputs: 1024 -->
+```
+
+### Creating a Pipe with multiple parameters
+
+To create a custom pipe that accepts multiple parameters, you define them in the transform method of your pipe class.
+Parameters are passed in the template separated by colons.
+
+#### Example:
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+    name: 'multiParam'
+})
+export class MultiParamPipe implements PipeTransform {
+    transform(value: number, param1: number, param2: number): number {
+        return value + param1 * param2;
+    }
+}
+```
+
+#### Usage in template:
+
+```html
+<p>{{ 5 | multiParam:2:3 }}</p> <!-- Outputs: 11 (5 + 2 * 3) -->
+```
+
+### Summary
+
+1. **Built-in Pipes**: Use Angular's built-in pipes for common transformations.
+2. **Custom Pipes**: Create custom pipes by implementing the PipeTransform interface and defining the transformation
+   logic.
+3. **Multiple Parameters**: Pass multiple parameters to custom pipes by defining them in the `transform` method and
+   passing them in the template separated by colons.
+   By leveraging pipes, you can keep your Angular templates clean and concise while applying complex data
+   transformations.
 
 ## 15. How to handle errors in async pipe in Angular? How to fix null in async pipe error?
 
+The async pipe in Angular is used to subscribe to an Observable or Promise and automatically handle the subscription and
+unsubscription. However, handling errors in the async pipe can be a bit tricky because the async pipe doesn't provide a
+direct way to handle errors within the template. Here are a few strategies to handle errors when using the async pipe:
+
+### 1. Using RxJS `catchError` Operator:
+
+One common approach is to handle errors in the component class using RxJS operators such as `catchError`.
+
+#### Example:
+
+```typescript
+import { Component } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { DataService } from './data.service';
+
+@Component({
+    selector: 'app-my-component',
+    template: `
+    <ng-container *ngIf="data$ | async as data; else errorTpl">
+      <!-- Template when data is available -->
+      <p>{{ data }}</p>
+    </ng-container>
+    <ng-template #errorTpl>
+      <!-- Template when an error occurs -->
+      <p>Error loading data</p>
+    </ng-template>
+  `
+})
+export class MyComponent {
+
+    constructor(private dataService: DataService) {
+    }
+
+    data$: Observable<any> = this.dataService.getData().pipe(
+        catchError(error => {
+            // Handle error and return a fallback value or empty observable
+            console.error(error);
+            return of(null); // or return an observable with a fallback value
+        })
+    );
+
+}
+```
+
+### 2. Using a service for error handling:
+
+You can create a service that handles errors and provides a fallback observable.
+
+#### Example:
+
+```typescript
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class DataService {
+    constructor(private http: HttpClient) {
+    }
+
+    getData(): Observable<any> {
+        return this.http.get('/api/data').pipe(
+            catchError(error => {
+                console.error('Error occurred:', error);
+                return of('Fallback data'); // Fallback data
+            })
+        );
+    }
+}
+```
+
+### Fixing `null` in Async Pipe Error
+
+The `null` error typically occurs when the observable returns a `null` or `undefined` value. You can handle this by
+ensuring your observables always return a defined value and by using Angular's template syntax to handle
+potential `null` values gracefully.
+
+#### 1. Using default values
+
+Ensure your observable never returns `null` by providing a default value:
+
+```typescript
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class DataService {
+    constructor(private http: HttpClient) {
+    }
+
+    getData(): Observable<any> {
+        return this.http.get('/api/data').pipe(
+            map(data => data || 'Default value') // Provide a default value
+        );
+    }
+}
+```
+
+#### 2. Using safe navigation operator in template
+
+Use Angular's safe navigation operator (`?.`) in the template to handle `null` or `undefined` values in the template:
+
+```html
+<p>{{ data$ | async | json }}</p>
+<p>{{ (data$ | async)?.property }}</p>
+```
+
+### Example Combining Both
+
+#### Component:
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { DataService } from './data.service';
+
+@Component({
+    selector: 'app-my-component',
+    template: `
+    <ng-container *ngIf="data$ | async as data; else errorTpl">
+      <p>{{ data }}</p>
+    </ng-container>
+    <ng-template #errorTpl>
+      <p>Error loading data or no data available</p>
+    </ng-template>
+  `
+})
+export class MyComponent implements OnInit {
+    data$: Observable<any>;
+
+    constructor(private dataService: DataService) {
+    }
+
+    ngOnInit() {
+        this.data$ = this.dataService.getData().pipe(
+            catchError(error => {
+                console.error(error);
+                return of('Default value'); // Fallback or default value
+            })
+        );
+    }
+}
+```
+
+By handling errors in the service or component and using default values, you can prevent `null` errors and provide a
+better user experience.
+
 ## 16. What is Angular routing? How do you set up routing in an Angular application?
 
+Angular routing is a feature of the Angular framework that allows developers to navigate between different views or pages within a single-page application (SPA). Routing is essential for creating a seamless user experience by enabling dynamic view rendering based on the application's URL. It helps in managing the state of the application and can load components, modules, or data dynamically.
+
+### Setting Up Routing in an Angular Application
+
+Setting up routing in an Angular application involves several steps, including configuring the routes, importing the necessary Angular modules, and defining the navigation links. Here's a step-by-step guide to setting up routing in an Angular application:
+
+#### 1. Generate a New Angular Application
+If you don't already have an Angular application, you can create one using Angular CLI:
+
+```bash
+ng new my-angular-app
+cd my-angular-app
+```
+
+#### 2. Generate Components
+Generate some components that will be used in the routing:
+
+```bash
+ng generate component home
+ng generate component about
+ng generate component contact
+```
+
+#### 3. Define Routes
+Open `app-routing.module.ts` (or create it if it doesn't exist) and define the routes. This file is typically created automatically when you create a new Angular application with routing enabled.
+
+Example:
+
+```typescript
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+import { AboutComponent } from './about/about.component';
+import { ContactComponent } from './contact/contact.component';
+
+const routes: Routes = [
+    { path: '', redirectTo: '/home', pathMatch: 'full' }, // Default route
+    { path: 'home', component: HomeComponent },
+    { path: 'about', component: AboutComponent },
+    { path: 'contact', component: ContactComponent },
+    { path: '**', redirectTo: '/home' } // Wildcard route for a 404 page
+];
+
+@NgModule({
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule]
+})
+export class AppRoutingModule { }
+```
+
+#### 4. Import the AppRoutingModule
+Open `app.module.ts` and import the `
+
+Example:
+
+```typescript
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { HomeComponent } from './home/home.component';
+import { AboutComponent } from './about/about.component';
+import { ContactComponent } from './contact/contact.component';
+
+@NgModule({
+    declarations: [
+        AppComponent,
+        HomeComponent,
+        AboutComponent,
+        ContactComponent
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
+
+#### 5. Create Navigation Links
+In your `app.component.html`, create navigation links to navigate between different routes:
+
+Example:
+
+```html
+<nav>
+    <a routerLink="/home">Home</a>
+    <a routerLink="/about">About</a>
+    <a routerLink="/contact">Contact</a>
+</nav>
+<router-outlet></router-outlet>
+```
+- `routerLink`: This directive is used to link to different routes defined in the routing module.
+- `<router-outlet>`: This directive acts as a placeholder where the routed component will be displayed.
+
+#### 6. Add Router Module and Configuration
+Ensure that `AppRoutingModule` is correctly imported and configured in your `app.module.ts`.
+
+### Summary
+1. **Generate an Angular Application**: Use Angular CLI to generate a new application. 
+2. **Generate Components**: Create the components that will be navigated between. 
+3. **Define Routes**: Set up routes in `app-routing.module.ts`. 
+4. **Import AppRoutingModule**: Import and configure the routing module in `app.module.ts`. 
+5. **Create Navigation Links**: Use routerLink and `<router-outlet>` in your template to navigate and display routed components.
+
+By following these steps, you can set up routing in your Angular application, enabling seamless navigation between different components and views.
+
 ## 17. What is a guard in Angular routing, and how do you implement it?
+
+In Angular, a guard is a feature used to control access to routes in an application. Guards are implemented as services that can be added to route configurations to determine whether or not a user can activate a route, deactivate a route, load a module, or unload a module. Angular provides several types of guards:
 
 ## 18. What are Angular forms? Differentiate between template-driven and reactive forms in Angular.
 
@@ -892,7 +1251,7 @@ the interactivity and appearance of Angular applications.
 
 ## 27. How do you optimize the performance of an Angular application?
 
-## 28. What are Angular interceptors, and how do you use them? Write an example of an interceptor
+## 28. What are Angular interceptors, and how do you use them? Write an example of an interceptor and how to handle error with interceptor.
 
 ## 29. How do you use environment variables in Angular?
 
