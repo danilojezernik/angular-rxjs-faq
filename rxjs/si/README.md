@@ -1,5 +1,24 @@
 ## 1. Kaj je RxJS?
 ## 2. Pojasnite koncept opazovalcev (Observables) v RxJS.
+
+**Opazovalci (Observables)** so osrednji koncept v RxJS (Reactive Extensions for JavaScript), kar je knjižnica za reaktivno programiranje z uporabo opazovalcev. Opazovalci predstavljajo zaporedje dogodkov ali vrednosti skozi čas, kar omogoča razvijalcem učinkovito upravljanje asinhronih podatkovnih tokov.
+
+### Ključni koncepti opazovalcev:
+1. **Proizvajalec**: Vir podatkov, ki ustvarja vrednosti skozi čas. To je lahko karkoli, od uporabniških vnosov, zahtevkov na spletne storitve do drugih asinhronih podatkovnih tokov. 
+2. **Potrošnik**: Naročnik ali opazovalec, ki porabi vrednosti, ki jih oddaja opazovalec.
+
+### Življenjski cikel opazovalca:
+1. **Ustvarjanje**: Opazovalec je ustvarjen z uporabo različnih metod, ki jih ponuja RxJS.
+2. **Naročnina**: Opazovalci se naročijo na opazovalca, da začnejo prejemati podatke.
+3. **Izvajanje**: Opazovalec začne proizvajati vrednosti in jih pošilja naročnikom.
+4. **Dokončanje/Napaka**: Opazovalec se dokonča ali naleti na napako, kar konča podatkovni tok.
+
+### Prednosti opazovalcev:
+- **Asinhrono upravljanje**: Enostavno upravljanje asinhronih podatkovnih tokov.
+- **Sestavljivost**: Uporaba operaterjev za kombiniranje več opazovalcev ali transformacijo podatkov.
+- **Leno izvajanje**: Opazovalci se ne izvajajo, dokler niso naročeni, kar jih naredi učinkovite.
+- **Prekinitev**: Naročnine je mogoče enostavno preklicati in ustaviti pretok podatkov.
+
 ## 3. Kako ustvarite opazovalca (Observable) v RxJS?
 ## 4. Kaj so operaterji v RxJS?
 ## 5. Razlikujte med cevovodnimi (pipeable) in ustvarjalnimi (creation) operaterji v RxJS.
