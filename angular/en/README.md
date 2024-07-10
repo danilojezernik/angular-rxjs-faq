@@ -1252,11 +1252,11 @@ In Angular, a guard is a feature used to control access to routes in an applicat
 that can be added to route configurations to determine whether a user can activate a route, deactivate a route, load a
 module, or unload a module. Angular provides several types of guards:
 
-1. CanActivate: Determines if a route can be activated.
-2. CanActivateChild: Determines if child routes can be activated.
-3. CanDeactivate: Determines if a route can be deactivated.
-4. Resolve: Pre-fetches data before activating a route.
-5. CanLoad: Determines if a module can be loaded.
+1. **CanActivate**: Determines if a route can be activated.
+2. **CanActivateChild**: Determines if child routes can be activated.
+3. **CanDeactivate**: Determines if a route can be deactivated.
+4. **Resolve**: Pre-fetches data before activating a route.
+5. **CanLoad**: Determines if a module can be loaded.
 
 ### Implementing a guard in Angular
 
@@ -1265,7 +1265,7 @@ authenticated.
 
 #### Step-by-Step implementation
 
-1. Generate a Guard
+1. **Generate a Guard**
 
 Use Angular CLI to generate a new guard:
 
@@ -1275,12 +1275,12 @@ ng generate guard auth
 
 This command creates a new file named `auth.guard.ts` in the `src/app` directory.
 
-2. Implement the Guard logic
+2. **Implement the Guard logic**
 
 Open the generated auth.guard.ts file and implement the logic. In this example, we'll use a simple authentication
 service to check if a user is logged in.
 
-Example:
+**Example**:
 
 ```typescript
 import { Injectable } from '@angular/core';
@@ -1313,11 +1313,11 @@ export class AuthGuard implements CanActivate {
 In this example, `AuthService` is a service that contains the method `isLoggedIn()`, which checks if the user is
 authenticated.
 
-3. Define the AuthService
+3. **Define the AuthService**
 
 Create the `AuthService` that contains the authentication logic.
 
-Example:
+**Example**:
 
 ```typescript
 import { Injectable } from '@angular/core';
@@ -1342,7 +1342,7 @@ export class AuthService {
 }
 ```
 
-4. Add the Guard to Routes
+4. **Add the Guard to Routes**
 
 Open the routing module (e.g., `app-routing.module.ts`) and add the `AuthGuard` to the route(s) you want to protect.
 
@@ -2071,14 +2071,17 @@ export class AppModule {
 }
 ```
 
-2. **Using HttpClient**: Once `HttpClientModule` is imported, you can inject `HttpClient` into your services or components to
+2. **Using HttpClient**: Once `HttpClientModule` is imported, you can inject `HttpClient` into your services or
+   components to
    make HTTP requests.
 
 ### Making HTTP Requests
+
 To make HTTP requests, follow these steps:
 
-1. **Create a Service**: It is a best practice to handle HTTP requests within a service. Create a service using Angular CLI:
-    
+1. **Create a Service**: It is a best practice to handle HTTP requests within a service. Create a service using Angular
+   CLI:
+
     ```bash
     ng generate service data
     ```
@@ -2099,7 +2102,8 @@ export class DataService {
 
     private apiUrl = 'https://api.example.com/data';
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {
+    }
 
     // Method to GET data
     getData(): Observable<any> {
@@ -2140,7 +2144,8 @@ import { DataService } from './data.service';
 export class AppComponent implements OnInit {
     data: any;
 
-    constructor(private dataService: DataService) { }
+    constructor(private dataService: DataService) {
+    }
 
     ngOnInit(): void {
         this.dataService.getData().subscribe(response => {
@@ -2149,20 +2154,634 @@ export class AppComponent implements OnInit {
     }
 }
 ```
+
 #### Summary
+
 - **HttpClientModule**: Import this module to use HTTP functionalities in your Angular app.
 - **HttpClient**: Use this service to perform HTTP requests.
-- **Service**: Create a service to handle HTTP requests, encapsulating the logic and making it reusable across components.
+- **Service**: Create a service to handle HTTP requests, encapsulating the logic and making it reusable across
+  components.
 - **Component**: Inject the service into components to use the data fetched from HTTP requests.
-By following these steps, you can efficiently manage HTTP requests in your Angular application using the `HttpClientModule` and `HttpClient` service.
+  By following these steps, you can efficiently manage HTTP requests in your Angular application using
+  the `HttpClientModule` and `HttpClient` service.
 
 ## 22. How do you handle errors in Angular applications?
 
+Handling errors in Angular applications involves using several strategies to ensure the application remains stable,
+user-friendly, and easy to debug. Here’s a comprehensive guide on how to handle errors effectively in Angular:
+
+### 1. Global Error Handling
+
+Angular provides a global error handling service that you can use to catch and handle errors globally.
+
+- **ErrorHandler Service**: You can create a custom error handler by extending the ErrorHandler class.
+
+```typescript
+import { ErrorHandler, Injectable } from '@angular/core';
+
+@Injectable()
+export class GlobalErrorHandler implements ErrorHandler {
+    handleError(error: any): void {
+        // Log the error to the console or a remote logging infrastructure
+        console.error('An error occurred:', error.message);
+        // Implement your custom error handling logic here
+    }
+}
+```
+
+You need to provide this custom handler in your module:
+
+```typescript
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+import { GlobalErrorHandler } from './global-error-handler';
+
+@NgModule({
+    declarations: [ AppComponent ],
+    imports: [ BrowserModule ],
+    providers: [ { provide: ErrorHandler, useClass: GlobalErrorHandler } ],
+    bootstrap: [ AppComponent ]
+})
+export class AppModule {
+}
+```
+
+### 2. HTTP Error Handling
+
+Handling HTTP errors involves catching errors when making HTTP requests and providing appropriate feedback to the user.
+
+- **HttpClient Interceptors**: You can use an interceptor to catch HTTP errors.
+
+```typescript
+import { Injectable } from '@angular/core';
+import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+@Injectable()
+export class HttpErrorInterceptor implements HttpInterceptor {
+    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        return next.handle(req).pipe(
+            catchError((error: HttpErrorResponse) => {
+                let errorMsg = '';
+                if (error.error instanceof ErrorEvent) {
+                    // Client-side error
+                    errorMsg = `Error: ${error.error.message}`;
+                } else {
+                    // Server-side error
+                    errorMsg = `Error Code: ${error.status}\nMessage: ${error.message}`;
+                }
+
+                // Display error message to the user
+                this.snackBar.open(errorMsg, 'Close', {
+                    duration: 3000,
+                });
+
+                console.log(errorMsg);
+                return throwError(errorMsg);
+            })
+        );
+    }
+}
+```
+
+**Provide this interceptor in your module**:
+
+```typescript
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+
+@NgModule({
+    providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
+    ]
+})
+export class AppModule {
+}
+```
+
+### 3. Component-Level Error Handling
+
+Handling errors specific to a component, usually within try-catch blocks or by subscribing to Observables.
+
+- **Try-Catch Block**:
+
+```typescript
+export class ExampleComponent {
+    constructor() {
+        try {
+            // Code that may throw an error
+        } catch (error) {
+            console.error('Component error:', error);
+        }
+    }
+}
+```
+
+- **Observable Error Handling**:
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { MyService } from './my-service.service';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+
+@Component({
+    selector: 'app-example',
+    templateUrl: './example.component.html'
+})
+export class ExampleComponent implements OnInit {
+    constructor(private myService: MyService) {
+    }
+
+    ngOnInit() {
+        this.myService.getData().pipe(
+            catchError(error => {
+                console.error('Component error:', error);
+                return of([]); // Provide a fallback value
+            })
+        ).subscribe(data => {
+            // Handle the data
+        });
+    }
+}
+```
+
+### 4. User Feedback
+
+Providing feedback to the user when an error occurs is crucial for a good user experience.
+
+- **Display Error Messages**: Use Angular’s template syntax to show error messages in the UI.
+
+```html
+
+<div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+</div>
+```
+
+- **Notification Services**: You can use Angular Material’s Snackbar or other notification libraries to show error
+  messages.
+
+```typescript
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+export class ExampleComponent {
+    constructor(private snackBar: MatSnackBar) {
+    }
+
+    showError(message: string) {
+        this.snackBar.open(message, 'Close', {
+            duration: 3000,
+        });
+    }
+}
+```
+
+### 5. Logging Errors
+
+Logging errors to an external service helps in monitoring and debugging issues.
+
+- **Remote Logging**: Send error details to a remote logging infrastructure (e.g., Sentry, LogRocket).
+
+```typescript
+import * as Sentry from '@sentry/angular';
+
+@Injectable()
+export class GlobalErrorHandler implements ErrorHandler {
+    handleError(error: any): void {
+        Sentry.captureException(error.originalError || error);
+        console.error('An error occurred:', error.message);
+    }
+}
+```
+
+### 6. Retry Mechanism
+
+Retry failed operations using retry logic with RxJS operators.
+
+- **Retry with RxJS**:
+
+```typescript
+import { retry } from 'rxjs/operators';
+
+this.myService.getData().pipe(
+    retry(3), // Retry up to 3 times before failing
+    catchError(error => {
+        console.error('Component error:', error);
+        return of([]); // Provide a fallback value
+    })
+).subscribe(data => {
+    // Handle the data
+});
+```
+
+By implementing these strategies, you can effectively handle errors in Angular applications, making them more robust,
+maintainable, and user-friendly.
+
 ## 23. What is Angular animation, and how do you implement it?
 
-## 24. How do you use Angular Material in an application?
+Angular animations provide a way to create dynamic and visually engaging transitions and effects in Angular
+applications. Built on top of the standard Web Animations API, Angular offers a powerful yet easy-to-use API for
+animating elements.
 
-## 25. What is the purpose of Angular Elements?
+### Types of Animations in Angular
+
+Angular provides several types of animations that can be used to enhance user experiences:
+
+1. **State and Transition Animations**: Change the state of an element and animate between these states.
+2. **Keyframe Animations**: Define multiple intermediate styles within a single animation.
+3. **Sequence Animations**: Run a series of animations in sequence.
+4. **Group Animations**: Run multiple animations simultaneously.
+
+### Implementing Angular Animation
+
+1. **Import the Angular Animation Module**
+
+First, import the `BrowserAnimationsModule` in your application's main module. This module is necessary for enabling
+animation capabilities.
+
+```typescript
+// app.module.ts
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgModule } from '@angular/core';
+import { AppComponent } from './app.component';
+
+@NgModule({
+    declarations: [ AppComponent ],
+    imports: [ BrowserAnimationsModule ],
+    bootstrap: [ AppComponent ],
+})
+export class AppModule {
+}
+```
+
+2. **Define Animations**
+
+Define animations in a component by importing animation-specific functions from `@angular/animations` and using them in
+the component metadata.
+
+Here is a basic example of an Angular animation:
+
+```typescript
+import { Component } from '@angular/core';
+import {
+    trigger,
+    state,
+    style,
+    animate,
+    transition,
+    keyframes,
+    sequence,
+    group
+} from '@angular/animations';
+
+@Component({
+    selector: 'app-root',
+    template: `
+    <div [@openClose]="isOpen ? 'open' : 'closed'" (click)="toggle()">
+      Click to toggle
+    </div>
+  `,
+    animations: [
+        trigger('openClose', [
+            state(
+                'open',
+                style({
+                    height: '200px',
+                    opacity: 1,
+                    backgroundColor: 'yellow',
+                })
+            ),
+            state(
+                'closed',
+                style({
+                    height: '100px',
+                    opacity: 0.5,
+                    backgroundColor: 'green',
+                })
+            ),
+            transition('open => closed', [ animate('1s') ]),
+            transition('closed => open', [ animate('0.5s') ]),
+        ]),
+    ],
+})
+export class AppComponent {
+    isOpen = true;
+
+    toggle() {
+        this.isOpen = !this.isOpen;
+    }
+}
+```
+
+3. **Using Animations in Templates**
+
+Bind the animation to an element using Angular's animation binding syntax. This example toggles the state between open
+and closed when the div is clicked.
+
+```html
+<!-- app.component.html -->
+<div [@openClose]="isOpen ? 'open' : 'closed'" (click)="toggle()">
+    Click to toggle
+</div>
+```
+
+### Types of Angular Animations in Detail
+
+#### State and Transition Animations
+
+State and transition animations allow you to define different styles for different states and transition between these
+states.
+
+```typescript
+trigger('openClose', [
+    state('open', style({ height: '200px', opacity: 1, backgroundColor: 'yellow' })),
+    state('closed', style({ height: '100px', opacity: 0.5, backgroundColor: 'green' })),
+    transition('open => closed', [ animate('1s') ]),
+    transition('closed => open', [ animate('0.5s') ]),
+])
+```
+
+#### Keyframe Animations
+
+Keyframe animations define multiple intermediate styles within a single animation, providing finer control over the
+animation.
+
+```typescript
+trigger('bounce', [
+    transition('* => *', [
+        animate('1s', keyframes([
+            style({ transform: 'translateY(0)', offset: 0 }),
+            style({ transform: 'translateY(-30px)', offset: 0.5 }),
+            style({ transform: 'translateY(0)', offset: 1.0 })
+        ]))
+    ])
+])
+```
+
+#### Sequence Animations
+
+Sequence animations run a series of animations in sequence.
+
+```typescript
+trigger('sequenceAnimation', [
+    transition('* => *', sequence([
+        animate('1s', style({ opacity: 0 })),
+        animate('1s', style({ opacity: 1 }))
+    ]))
+])
+```
+
+#### Group Animations
+
+Group animations run multiple animations simultaneously.
+
+```typescript
+trigger('groupAnimation', [
+    transition('* => *', group([
+        animate('1s', style({ width: '100px' })),
+        animate('1s', style({ height: '100px' }))
+    ]))
+])
+```
+
+### Summary
+
+Angular animations are a robust tool for creating engaging and dynamic user interfaces. By importing
+BrowserAnimationsModule, defining animations
+using `trigger`, `state`, `style`, `animate`, `transition`, `keyframes`, `sequence`, and
+`group` functions, and binding these animations in your templates, you can easily add various types of animations to
+your
+Angular applications.
+
+## 72. When to use Angular animations instead of CSS animations? How to animate a button click event to fade in/out a block?
+
+Angular animations are best used for complex, state-driven animations tightly integrated with Angular components. For
+simple animations, CSS might suffice.
+
+### Angular Animations:
+
+- **Complex State Transitions**: When you need to animate complex state transitions that involve multiple elements and
+  conditions.
+- **Dynamic Animations**: If the animation needs to respond to runtime conditions or user interactions in a more dynamic
+  way.
+- **Component-based Animations**: For animations that are tightly coupled with Angular components and require the use of
+  Angular's state management.
+- **Advanced Sequencing**: When animations need advanced sequencing and orchestration.
+
+### CSS Animations:
+
+- **Simple Animations**: For basic animations that do not depend on application state, such as hover effects or simple
+  transitions.
+- **Performance**: CSS animations are generally more performant because they are handled by the browser's rendering
+  engine.
+- **Ease of Use**: When you want to quickly implement animations without the need for Angular-specific syntax.
+
+### How to Animate a Button Click Event to Fade In/Out a Block
+
+To animate a button click event to fade in/out a block using Angular animations, follow these steps:
+
+1. Install Angular Animations: Ensure you have Angular animations package installed.
+
+```bash
+npm install @angular/animations
+```
+
+2. Import Necessary Modules: Import the BrowserAnimationsModule in your `app.module.ts`.
+
+```typescript
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+@NgModule({
+    imports: [ BrowserAnimationsModule, ... ]
+})
+export class AppModule {
+}
+```
+
+3. Define Animations in Component: Define the animations in your component.
+
+```typescript
+import { Component } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/animations';
+
+@Component({
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    animations: [
+        trigger('fadeInOut', [
+            state('void', style({
+                opacity: 0
+            })),
+            transition(':enter, :leave', [
+                animate(500)
+            ])
+        ])
+    ]
+})
+export class AppComponent {
+    show = false;
+
+    toggle() {
+        this.show = !this.show;
+    }
+}
+```
+
+4. Update Template: Update your component template to use the defined animation.
+
+```html
+
+<button (click)="toggle()">Toggle Block</button>
+<div *ngIf="show" @fadeInOut>
+    <p>This block will fade in and out</p>
+</div>
+```
+
+### Explanation:
+
+- **Importing Required Modules**: Import `BrowserAnimationsModule` to enable animations.
+- **Defining Animations**: Define a trigger named `fadeInOut` with two states: `void` (when the element is not in the
+  DOM) and the default state. Use the `transition` function to define the enter and leave transitions with a 500ms
+  duration.
+- **Template Binding**: Use Angular's structural directive `*ngIf` to conditionally include the block and bind the
+  animation trigger to the element.
+
+## 25. What is the purpose of Angular Elements and give an example of how to use it.
+
+The purpose of Angular Elements is to enable Angular components to be used as Web Components. This allows Angular
+components to be integrated into non-Angular applications, broadening the scope of where Angular components can be
+utilized. Here are the key benefits and purposes of Angular Elements:
+
+### 1. Integration with Non-Angular Projects:
+Angular Elements allows developers to wrap Angular components as custom elements (Web Components), which can then be embedded in any HTML page, regardless of whether the page uses Angular or another framework.
+
+### 2. Reusability:
+By converting Angular components into Web Components, those components become reusable across different projects and frameworks. This promotes a high level of code reusability and consistency across various parts of an organization's applications.
+
+### 3. Ease of Use:
+Web Components created with Angular Elements can be used just like any other HTML element, making it straightforward for developers who are not familiar with Angular to use these components in their projects.
+
+### 4. Standardization:
+Angular Elements leverages the Web Components standard, ensuring that the components created are compatible with all modern browsers and can work with any front-end framework that supports Web Components.
+
+### 5. Simplified Upgrades and Maintenance:
+As Angular Elements are standard Web Components, the Angular code inside these components can be updated independently from the rest of the application. This modularity can simplify maintenance and upgrades.
+
+### 6. Enhanced Collaboration:
+Teams using different frameworks or working on different parts of a large project can collaborate more effectively. Angular Elements allows for the encapsulation of functionality within Angular components that can be shared and used by other teams.
+
+Overall, Angular Elements provides a way to extend the reach of Angular components, making them versatile, reusable, and easy to integrate into a wide variety of web applications.
+
+### Using Angular Elements:
+
+First, ensure you have Angular CLI installed. If not, you can install it using:
+
+```bash
+npm install -g @angular/cli
+```
+
+Then, create a new Angular project:
+
+```bash
+ng new angular-elements-demo
+cd angular-elements-demo
+```
+
+Next, create a new Angular component:
+
+```bash
+ng generate component hello-world
+```
+
+This will generate a new component `HelloWorldComponent`. For simplicity, modify the `hello-world.component.ts` to look like this:
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+    selector: 'app-hello-world',
+    template: `<h1>Hello, {{name}}!</h1>`,
+    styles: [`h1 { font-family: Lato; }`]
+})
+export class HelloWorldComponent {
+    name: string = 'Angular Elements';
+}
+```
+
+Now you need to add Angular Elements and the Angular Builder Custom Elements to your project:
+```bash
+ng add @angular/elements
+npm install @webcomponents/custom-elements
+```
+
+Now, let's modify the `app.module.ts` to include Angular Elements and define our custom element:
+
+```typescript
+import { NgModule, Injector } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { createCustomElement } from '@angular/elements';
+import { AppComponent } from './app.component';
+import { HelloWorldComponent } from './hello-world/hello-world.component';
+
+@NgModule({
+    declarations: [
+        AppComponent,
+        HelloWorldComponent
+    ],
+    imports: [
+        BrowserModule
+    ],
+    providers: []
+})
+export class AppModule {
+    constructor(private injector: Injector) {}
+
+    ngDoBootstrap() {
+        const helloWorldElement = createCustomElement(HelloWorldComponent, { injector: this.injector });
+        customElements.define('hello-world', helloWorldElement);
+    }
+}
+```
+
+Then, build your project:
+
+```bash
+ng build
+```
+
+This will generate your web components in the `dist/angular-elements-demo` directory. You can then serve this component using any web server.
+
+Finally, create an `index.html` file in the `dist/angular-elements-demo` directory to use your custom element:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Angular Elements Demo</title>
+</head>
+<body>
+  <hello-world></hello-world>
+  <script src="runtime.js"></script>
+  <script src="polyfills.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
+```
+
+You can serve this file using a simple HTTP server, such as `http-server`:
+
+```bash
+npx http-server ./dist/angular-elements-demo
+```
+
+Open `http://localhost:8080` (or the port number displayed) in your browser to see your Angular component rendered as a Web Component.
+
+This example demonstrates the basic setup to create an Angular component, wrap it as a custom element using Angular Elements, and serve it as a Web Component.
 
 ## 26. Explain the change detection mechanism in Angular.
 
@@ -2317,8 +2936,6 @@ applications based on the environment and requirements.
 ## 65. What is unsubscribe in Angular? Why is it important? What are the ways to unsubscribe?
 
 ## 66. What is change detection? How does onPush work? Why is onPush important?
-
-## 67. What is Angular SSR (Server-Side Rendering)? What are the pros and cons of SSR?
 
 ## 68. How to use standalone components in Angular? What are the benefits?
 
