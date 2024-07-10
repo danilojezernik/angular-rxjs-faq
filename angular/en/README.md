@@ -1,5 +1,4 @@
-<details>
-<summary><h2>1. What is Angular, and how does it differ from AngularJS?</h2></summary>
+## 1. What is Angular, and how does it differ from AngularJS?
 
 **Angular** is a platform and framework for building single-page client applications using HTML, CSS, and TypeScript.
 Angular is developed and maintained by Google and is often referred to as Angular 2+ or simply Angular to distinguish it
@@ -41,10 +40,7 @@ angular.module('myApp', [])
     });
 ```
 
-</details>
-
-<details>
-<summary><h2>2. Explain the architecture of an Angular application.</h2></summary>
+## 2. Explain the architecture of an Angular application.
 
 An Angular application is structured as a collection of modules, components, and services.
 
@@ -75,12 +71,8 @@ import { DataService } from './data.service';
 export class AppModule {
 }
 ```
-</details>
 
-<details>
-<summary>
-<h2>3. What are Angular modules, and why are they important? Describe the role of NgModule in Angular.</h2>
-</summary>
+## 3. What are Angular modules, and why are they important? Describe the role of NgModule in Angular.
 
 Angular modules are a way to organize an application and manage dependencies. They help encapsulate components,
 directives, pipes, and services, making the code more modular and maintainable.
@@ -92,9 +84,8 @@ NgModule is a decorator that marks a class as an Angular module and provides met
 - **Organization**: Modules group related components and services.
 - **Reusability**: Modules can be reused across different parts of an application or even different applications.
 - **Dependency Management**: Modules manage service instances and dependencies.
-</details>
 
-## 4. How an Angular App gets Loaded and Started? What are index.html, app-root, selector and main.ts?
+## 3. How an Angular App gets Loaded and Started? What are index.html, app-root, selector and main.ts?
 
 5 Steps executed when client send request from browser:
 
