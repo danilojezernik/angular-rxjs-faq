@@ -1,12 +1,11 @@
-## 1. What is Angular, and how does it differ from AngularJS?
+<details>
+<summary><h1>1. What is Angular, and how does it differ from AngularJS?</h1></summary>
 
 **Angular** is a platform and framework for building single-page client applications using HTML, CSS, and TypeScript.
 Angular is developed and maintained by Google and is often referred to as Angular 2+ or simply Angular to distinguish it
 from its predecessor, AngularJS.
 
-**AngularJS**, on the other hand, is the original version of Angular, which is based on JavaScript and was released in
-
-2010.
+**AngularJS**, on the other hand, is the original version of Angular, which is based on JavaScript and was released in 2010.
 
 ### Differences:
 
@@ -41,6 +40,10 @@ angular.module('myApp', [])
         $scope.message = 'Hello, AngularJS!';
     });
 ```
+
+</details>
+
+
 
 ## 2. Explain the architecture of an Angular application.
 
