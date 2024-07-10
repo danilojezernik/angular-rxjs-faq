@@ -1894,7 +1894,267 @@ client’s browser. This pre-rendered HTML is then sent to the client, allowing 
 the context of Angular, SSR involves rendering the Angular application on the server and then sending the generated HTML
 to the client.
 
+#### Benefits of Server-Side Rendering
+
+1. **Improved Performance**:
+    - Faster initial page load times because the HTML is pre-rendered on the server.
+    - Reduced time to first meaningful paint, as the browser can display content immediately.
+
+
+2. **Better SEO**:
+    - Search engines can easily index the pre-rendered HTML content, improving the website's search engine ranking.
+    - Web crawlers from search engines that have difficulty executing JavaScript can still read the content.
+
+
+3. **Enhanced Accessibility**:
+    - Users with slow internet connections or older devices can see the content faster.
+    - Users who disable JavaScript can still access the content.
+
+### How Angular Universal Works
+
+Angular Universal works by using a server-side platform, such as Node.js, to render Angular applications. Here’s a
+high-level overview of how it works:
+
+1. Server-Side Rendering:
+    - The Angular application runs on the server using a platform like Node.js.
+    - When a request is made to the server, the Angular application renders the requested page to HTML.
+    - The server sends this pre-rendered HTML to the client.
+
+2. Client-Side Bootstrapping:
+    - Once the pre-rendered HTML is loaded in the browser, Angular takes over and bootstraps the client-side
+      application.
+    - This process is known as "hydration" and it involves attaching event listeners and making the application
+      interactive.
+
+### Setting Up Angular Universal
+
+To set up Angular Universal in your Angular application, follow these steps:
+
+1. **Install Angular Universal**: Use Angular CLI to add Angular Universal to your project.
+
+```bash
+ng add @nguniversal/express-engine
+```
+
+2. **Update Server-Side Code**: This command will create several files and update your project configuration. Key files
+   include:
+    - `server.ts`: The main server-side entry point.
+    - `app.server.module.ts`: The server-side application module.
+
+3. **Configure Angular Universal**: The `ng add @nguniversal/express-engine` command automatically configures your
+   application for SSR. However, you might need to update some configuration settings or make adjustments based on your
+   application’s requirements.
+
+4. Build and Serve the Application:
+    - Build the client and server bundles using Angular CLI.
+   ```bash
+   npm run build:ssr
+   ```
+    - Serve the application using the server bundle.
+    ```bash
+    npm run serve:ssr
+    ```
+
+### Example of Server-Side Rendering
+
+Here’s a simplified example of how Angular Universal sets up SSR:
+
+1. `app.server.module.ts`: This module is used to bootstrap the server-side application.
+
+```typescript
+import { NgModule } from '@angular/core';
+import { ServerModule } from '@angular/platform-server';
+import { AppModule } from './app.module';
+import { AppComponent } from './app.component';
+
+@NgModule({
+    imports: [
+        AppModule,
+        ServerModule,
+    ],
+    bootstrap: [ AppComponent ],
+})
+export class AppServerModule {
+}
+```
+
+2. `server.ts`: The main server-side entry point.
+
+```typescript
+import 'zone.js/dist/zone-node';
+import { ngExpressEngine } from '@nguniversal/express-engine';
+import * as express from 'express';
+import { join } from 'path';
+import { APP_BASE_HREF } from '@angular/common';
+import { existsSync } from 'fs';
+import { AppServerModule } from './src/main.server';
+
+const app = express();
+
+const DIST_FOLDER = join(process.cwd(), 'dist');
+const domino = require('domino');
+const fs = require('fs');
+const template = fs.readFileSync(join(DIST_FOLDER, 'browser', 'index.html')).toString();
+const win = domino.createWindow(template);
+
+global['window'] = win;
+global['document'] = win.document;
+
+app.engine('html', ngExpressEngine({
+    bootstrap: AppServerModule,
+}));
+
+app.set('view engine', 'html');
+app.set('views', join(DIST_FOLDER, 'browser'));
+
+app.get('*.*', express.static(join(DIST_FOLDER, 'browser')));
+
+app.get('*', (req, res) => {
+    res.render('index', { req, providers: [ { provide: APP_BASE_HREF, useValue: req.baseUrl } ] });
+});
+
+const PORT = process.env.PORT || 4000;
+
+app.listen(PORT, () => {
+    console.log(`Node Express server listening on http://localhost:${PORT}`);
+});
+```
+
+#### Summary
+
+- Angular Universal enables server-side rendering (SSR) for Angular applications.
+- Server-Side Rendering (SSR) improves performance, SEO, and accessibility by rendering the Angular application on the
+  server and sending pre-rendered HTML to the client.
+- Benefits include faster initial page loads, better search engine indexing, and enhanced accessibility for users with
+  slower connections or older devices.
+- Setting Up Angular Universal involves installing Angular Universal, configuring the server-side code, and
+  building/serving the application with SSR.
+  By using Angular Universal, you can significantly enhance the performance and SEO of your Angular applications,
+  providing a better user experience.
+
 ## 21. How do you handle HTTP requests in Angular? What is the HttpClientModule, and how do you use it?
+
+In Angular, handling HTTP requests is achieved using the HttpClient service, which is part of the `@angular/common/http`
+package. The `HttpClientModule` is the Angular module that needs to be imported to enable HTTP services within your
+application.
+
+### HttpClientModule
+
+The `HttpClientModule` provides the necessary services to perform HTTP requests in an Angular application. To use it,
+you need to import it into your root module (`AppModule`) or any other specific module where you plan to make HTTP
+requests.
+
+Here’s how you import and set up the `HttpClientModule`:
+
+1. **Import HttpClientModule**: First, import the `HttpClientModule` in your `AppModule` or the respective module.
+
+```typescript
+   import { BrowserModule } from '@angular/platform-browser';
+
+import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+
+import { AppComponent } from './app.component';
+
+@NgModule({
+    declarations: [
+        AppComponent
+    ],
+    imports: [
+        BrowserModule,
+        HttpClientModule // Import HttpClientModule here
+    ],
+    providers: [],
+    bootstrap: [ AppComponent ]
+})
+export class AppModule {
+}
+```
+
+2. **Using HttpClient**: Once `HttpClientModule` is imported, you can inject `HttpClient` into your services or components to
+   make HTTP requests.
+
+### Making HTTP Requests
+To make HTTP requests, follow these steps:
+
+1. **Create a Service**: It is a best practice to handle HTTP requests within a service. Create a service using Angular CLI:
+    
+    ```bash
+    ng generate service data
+    ```
+   This command will create a `data.service.ts` file.
+
+
+2. Inject HttpClient into the Service: In the created service, import HttpClient and inject it through the constructor.
+
+```typescript
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class DataService {
+
+    private apiUrl = 'https://api.example.com/data';
+
+    constructor(private http: HttpClient) { }
+
+    // Method to GET data
+    getData(): Observable<any> {
+        return this.http.get<any>(this.apiUrl);
+    }
+
+    // Method to POST data
+    postData(data: any): Observable<any> {
+        return this.http.post<any>(this.apiUrl, data);
+    }
+
+    // Method to PUT data
+    updateData(id: string, data: any): Observable<any> {
+        return this.http.put<any>(`${this.apiUrl}/${id}`, data);
+    }
+
+    // Method to DELETE data
+    deleteData(id: string): Observable<any> {
+        return this.http.delete<any>(`${this.apiUrl}/${id}`);
+    }
+}
+```
+
+3. Using the Service in a Component: Now, you can use the service in your components to make HTTP requests.
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { DataService } from './data.service';
+
+@Component({
+    selector: 'app-root',
+    template: `
+    <div *ngIf="data">
+      <pre>{{ data | json }}</pre>
+    </div>
+  `
+})
+export class AppComponent implements OnInit {
+    data: any;
+
+    constructor(private dataService: DataService) { }
+
+    ngOnInit(): void {
+        this.dataService.getData().subscribe(response => {
+            this.data = response;
+        });
+    }
+}
+```
+#### Summary
+- **HttpClientModule**: Import this module to use HTTP functionalities in your Angular app.
+- **HttpClient**: Use this service to perform HTTP requests.
+- **Service**: Create a service to handle HTTP requests, encapsulating the logic and making it reusable across components.
+- **Component**: Inject the service into components to use the data fetched from HTTP requests.
+By following these steps, you can efficiently manage HTTP requests in your Angular application using the `HttpClientModule` and `HttpClient` service.
 
 ## 22. How do you handle errors in Angular applications?
 
