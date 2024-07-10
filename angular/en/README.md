@@ -1,5 +1,5 @@
 <details>
-<summary><h1>1. What is Angular, and how does it differ from AngularJS?</h1></summary>
+<summary><h2>1. What is Angular, and how does it differ from AngularJS?</h2></summary>
 
 **Angular** is a platform and framework for building single-page client applications using HTML, CSS, and TypeScript.
 Angular is developed and maintained by Google and is often referred to as Angular 2+ or simply Angular to distinguish it
