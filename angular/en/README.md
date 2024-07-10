@@ -2656,24 +2656,39 @@ components to be integrated into non-Angular applications, broadening the scope 
 utilized. Here are the key benefits and purposes of Angular Elements:
 
 ### 1. Integration with Non-Angular Projects:
-Angular Elements allows developers to wrap Angular components as custom elements (Web Components), which can then be embedded in any HTML page, regardless of whether the page uses Angular or another framework.
+
+Angular Elements allows developers to wrap Angular components as custom elements (Web Components), which can then be
+embedded in any HTML page, regardless of whether the page uses Angular or another framework.
 
 ### 2. Reusability:
-By converting Angular components into Web Components, those components become reusable across different projects and frameworks. This promotes a high level of code reusability and consistency across various parts of an organization's applications.
+
+By converting Angular components into Web Components, those components become reusable across different projects and
+frameworks. This promotes a high level of code reusability and consistency across various parts of an organization's
+applications.
 
 ### 3. Ease of Use:
-Web Components created with Angular Elements can be used just like any other HTML element, making it straightforward for developers who are not familiar with Angular to use these components in their projects.
+
+Web Components created with Angular Elements can be used just like any other HTML element, making it straightforward for
+developers who are not familiar with Angular to use these components in their projects.
 
 ### 4. Standardization:
-Angular Elements leverages the Web Components standard, ensuring that the components created are compatible with all modern browsers and can work with any front-end framework that supports Web Components.
+
+Angular Elements leverages the Web Components standard, ensuring that the components created are compatible with all
+modern browsers and can work with any front-end framework that supports Web Components.
 
 ### 5. Simplified Upgrades and Maintenance:
-As Angular Elements are standard Web Components, the Angular code inside these components can be updated independently from the rest of the application. This modularity can simplify maintenance and upgrades.
+
+As Angular Elements are standard Web Components, the Angular code inside these components can be updated independently
+from the rest of the application. This modularity can simplify maintenance and upgrades.
 
 ### 6. Enhanced Collaboration:
-Teams using different frameworks or working on different parts of a large project can collaborate more effectively. Angular Elements allows for the encapsulation of functionality within Angular components that can be shared and used by other teams.
 
-Overall, Angular Elements provides a way to extend the reach of Angular components, making them versatile, reusable, and easy to integrate into a wide variety of web applications.
+Teams using different frameworks or working on different parts of a large project can collaborate more effectively.
+Angular Elements allows for the encapsulation of functionality within Angular components that can be shared and used by
+other teams.
+
+Overall, Angular Elements provides a way to extend the reach of Angular components, making them versatile, reusable, and
+easy to integrate into a wide variety of web applications.
 
 ### Using Angular Elements:
 
@@ -2696,7 +2711,8 @@ Next, create a new Angular component:
 ng generate component hello-world
 ```
 
-This will generate a new component `HelloWorldComponent`. For simplicity, modify the `hello-world.component.ts` to look like this:
+This will generate a new component `HelloWorldComponent`. For simplicity, modify the `hello-world.component.ts` to look
+like this:
 
 ```typescript
 import { Component } from '@angular/core';
@@ -2704,7 +2720,7 @@ import { Component } from '@angular/core';
 @Component({
     selector: 'app-hello-world',
     template: `<h1>Hello, {{name}}!</h1>`,
-    styles: [`h1 { font-family: Lato; }`]
+    styles: [ `h1 { font-family: Lato; }` ]
 })
 export class HelloWorldComponent {
     name: string = 'Angular Elements';
@@ -2712,6 +2728,7 @@ export class HelloWorldComponent {
 ```
 
 Now you need to add Angular Elements and the Angular Builder Custom Elements to your project:
+
 ```bash
 ng add @angular/elements
 npm install @webcomponents/custom-elements
@@ -2737,7 +2754,8 @@ import { HelloWorldComponent } from './hello-world/hello-world.component';
     providers: []
 })
 export class AppModule {
-    constructor(private injector: Injector) {}
+    constructor(private injector: Injector) {
+    }
 
     ngDoBootstrap() {
         const helloWorldElement = createCustomElement(HelloWorldComponent, { injector: this.injector });
@@ -2752,7 +2770,8 @@ Then, build your project:
 ng build
 ```
 
-This will generate your web components in the `dist/angular-elements-demo` directory. You can then serve this component using any web server.
+This will generate your web components in the `dist/angular-elements-demo` directory. You can then serve this component
+using any web server.
 
 Finally, create an `index.html` file in the `dist/angular-elements-demo` directory to use your custom element:
 
@@ -2760,15 +2779,15 @@ Finally, create an `index.html` file in the `dist/angular-elements-demo` directo
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Angular Elements Demo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angular Elements Demo</title>
 </head>
 <body>
-  <hello-world></hello-world>
-  <script src="runtime.js"></script>
-  <script src="polyfills.js"></script>
-  <script src="main.js"></script>
+<hello-world></hello-world>
+<script src="runtime.js"></script>
+<script src="polyfills.js"></script>
+<script src="main.js"></script>
 </body>
 </html>
 ```
@@ -2779,11 +2798,99 @@ You can serve this file using a simple HTTP server, such as `http-server`:
 npx http-server ./dist/angular-elements-demo
 ```
 
-Open `http://localhost:8080` (or the port number displayed) in your browser to see your Angular component rendered as a Web Component.
+Open `http://localhost:8080` (or the port number displayed) in your browser to see your Angular component rendered as a
+Web Component.
 
-This example demonstrates the basic setup to create an Angular component, wrap it as a custom element using Angular Elements, and serve it as a Web Component.
+This example demonstrates the basic setup to create an Angular component, wrap it as a custom element using Angular
+Elements, and serve it as a Web Component.
 
 ## 26. Explain the change detection mechanism in Angular.
+
+In Angular, change detection is a mechanism that updates the view whenever the application state changes. This ensures
+that the UI is always in sync with the underlying data model. The key components and steps involved in Angular's change
+detection mechanism are as follows:
+
+### Key Components
+
+#### 1. Zone.js:
+
+Angular uses Zone.js to detect and manage asynchronous operations. It patches asynchronous APIs
+like `setTimeout`, `XHR`,
+and promises, allowing Angular to be notified when these operations complete.
+
+#### 2. NgZone:
+
+Angular's `NgZone` service builds on Zone.js to run change detection automatically when certain asynchronous operations
+complete, such as event handlers, HTTP requests, or timers.
+
+#### 3. ChangeDetector:
+
+Each component in Angular has an associated change detector. These change detectors form a tree that parallels the
+component tree, allowing Angular to check each component for changes.
+
+### Change Detection Strategies
+
+Angular provides two change detection strategies:
+
+#### 1. Default:
+
+This is the default strategy where Angular checks every component in the component tree for changes. It is eager but can
+be inefficient for large applications because it checks all components even if some have not changed.
+
+#### 2. OnPush:
+
+This strategy is used to optimize performance. Angular only checks the component and its subtree if an `@Input` property
+changes, an event originated from the component, or a change detection is explicitly triggered. This strategy relies on
+immutability and pure functions to determine if changes have occurred.
+
+### Change Detection Process
+
+#### 1. Application State Change:
+
+An application state change can be triggered by user interactions (e.g., button clicks), asynchronous operations (e.g.,
+HTTP requests), or direct model updates.
+
+#### 2. Run Change Detection:
+
+Angular uses Zone.js to detect when the application state might have changed. When an asynchronous operation completes
+or an event occurs, Zone.js triggers Angular’s change detection process.
+
+#### 3. Change Detection Tree Traversal:
+
+Angular traverses the change detector tree starting from the root component. It checks each component to see if its
+model has changed. If a change is detected, Angular updates the view to reflect the new state.
+
+#### 4. View Update:
+
+If changes are detected, Angular updates the DOM to match the new application state.
+
+### Optimizing Change Detection
+
+#### 1. Immutable Data Structures:
+
+Using immutable data structures ensures that change detection is efficient. When data changes, Angular can quickly
+determine if a change has occurred by checking object references.
+
+#### 2. TrackBy Function in ngFor:
+
+When using `ngFor` to loop through a list of items, specifying a `trackBy` function helps Angular track items by a
+unique
+identifier, reducing the number of checks and DOM manipulations.
+
+#### 3. Manual Change Detection Control:
+
+Angular allows for manual control of change detection via methods such as `ChangeDetectorRef.detectChanges()` and
+`ChangeDetectorRef.markForCheck()`. These methods enable developers to trigger or defer change detection explicitly.
+
+#### 4. Using OnPush Strategy:
+
+Adopting the `OnPush` change detection strategy for components can greatly improve performance by reducing the frequency
+of change detection checks.
+
+In summary, Angular's change detection mechanism ensures that the view is always in sync with the application state. By
+using a combination of Zone.js, `NgZone`, and change detectors, Angular efficiently detects and propagates changes,
+keeping the UI updated. Developers can optimize this process through various strategies and techniques to enhance
+performance.
 
 ## 27. How do you optimize the performance of an Angular application?
 
