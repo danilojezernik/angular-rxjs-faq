@@ -2894,6 +2894,20 @@ performance.
 
 ## 27. How do you optimize the performance of an Angular application?
 
+### 1. Lazy Loading
+### 2. Tree Shaking
+### 3. OnPush Change Detection Strategy
+### 4. Pure Pipes
+### 5. Optimize Template Expressions
+### 6. Use trackBy with ngFor
+### 7. Service Workers and PWA
+### 8. Optimize Third-Party Libraries
+### 9. Preloading Strategy
+### 10. Server-Side Rendering (SSR)
+### 11. Profiling and Monitoring
+### 12. Optimizing Images and Assets
+### 11. Network Optimization
+
 ## 28. What are Angular interceptors, and how do you use them? Write an example of an interceptor and how to handle error with interceptor.
 
 ## 29. How do you use environment variables in Angular?
