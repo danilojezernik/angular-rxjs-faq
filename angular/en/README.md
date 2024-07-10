@@ -1118,13 +1118,19 @@ better user experience.
 
 ## 16. What is Angular routing? How do you set up routing in an Angular application?
 
-Angular routing is a feature of the Angular framework that allows developers to navigate between different views or pages within a single-page application (SPA). Routing is essential for creating a seamless user experience by enabling dynamic view rendering based on the application's URL. It helps in managing the state of the application and can load components, modules, or data dynamically.
+Angular routing is a feature of the Angular framework that allows developers to navigate between different views or
+pages within a single-page application (SPA). Routing is essential for creating a seamless user experience by enabling
+dynamic view rendering based on the application's URL. It helps in managing the state of the application and can load
+components, modules, or data dynamically.
 
 ### Setting Up Routing in an Angular Application
 
-Setting up routing in an Angular application involves several steps, including configuring the routes, importing the necessary Angular modules, and defining the navigation links. Here's a step-by-step guide to setting up routing in an Angular application:
+Setting up routing in an Angular application involves several steps, including configuring the routes, importing the
+necessary Angular modules, and defining the navigation links. Here's a step-by-step guide to setting up routing in an
+Angular application:
 
 #### 1. Generate a New Angular Application
+
 If you don't already have an Angular application, you can create one using Angular CLI:
 
 ```bash
@@ -1133,6 +1139,7 @@ cd my-angular-app
 ```
 
 #### 2. Generate Components
+
 Generate some components that will be used in the routing:
 
 ```bash
@@ -1142,7 +1149,9 @@ ng generate component contact
 ```
 
 #### 3. Define Routes
-Open `app-routing.module.ts` (or create it if it doesn't exist) and define the routes. This file is typically created automatically when you create a new Angular application with routing enabled.
+
+Open `app-routing.module.ts` (or create it if it doesn't exist) and define the routes. This file is typically created
+automatically when you create a new Angular application with routing enabled.
 
 Example:
 
@@ -1162,13 +1171,15 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
-    exports: [RouterModule]
+    imports: [ RouterModule.forRoot(routes) ],
+    exports: [ RouterModule ]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}
 ```
 
 #### 4. Import the AppRoutingModule
+
 Open `app.module.ts` and import the `
 
 Example:
@@ -1194,17 +1205,20 @@ import { ContactComponent } from './contact/contact.component';
         AppRoutingModule
     ],
     providers: [],
-    bootstrap: [AppComponent]
+    bootstrap: [ AppComponent ]
 })
-export class AppModule { }
+export class AppModule {
+}
 ```
 
 #### 5. Create Navigation Links
+
 In your `app.component.html`, create navigation links to navigate between different routes:
 
 Example:
 
 ```html
+
 <nav>
     <a routerLink="/home">Home</a>
     <a routerLink="/about">About</a>
@@ -1212,24 +1226,157 @@ Example:
 </nav>
 <router-outlet></router-outlet>
 ```
+
 - `routerLink`: This directive is used to link to different routes defined in the routing module.
 - `<router-outlet>`: This directive acts as a placeholder where the routed component will be displayed.
 
 #### 6. Add Router Module and Configuration
+
 Ensure that `AppRoutingModule` is correctly imported and configured in your `app.module.ts`.
 
 ### Summary
-1. **Generate an Angular Application**: Use Angular CLI to generate a new application. 
-2. **Generate Components**: Create the components that will be navigated between. 
-3. **Define Routes**: Set up routes in `app-routing.module.ts`. 
-4. **Import AppRoutingModule**: Import and configure the routing module in `app.module.ts`. 
-5. **Create Navigation Links**: Use routerLink and `<router-outlet>` in your template to navigate and display routed components.
 
-By following these steps, you can set up routing in your Angular application, enabling seamless navigation between different components and views.
+1. **Generate an Angular Application**: Use Angular CLI to generate a new application.
+2. **Generate Components**: Create the components that will be navigated between.
+3. **Define Routes**: Set up routes in `app-routing.module.ts`.
+4. **Import AppRoutingModule**: Import and configure the routing module in `app.module.ts`.
+5. **Create Navigation Links**: Use routerLink and `<router-outlet>` in your template to navigate and display routed
+   components.
+
+By following these steps, you can set up routing in your Angular application, enabling seamless navigation between
+different components and views.
 
 ## 17. What is a guard in Angular routing, and how do you implement it?
 
-In Angular, a guard is a feature used to control access to routes in an application. Guards are implemented as services that can be added to route configurations to determine whether or not a user can activate a route, deactivate a route, load a module, or unload a module. Angular provides several types of guards:
+In Angular, a guard is a feature used to control access to routes in an application. Guards are implemented as services
+that can be added to route configurations to determine whether a user can activate a route, deactivate a route, load a
+module, or unload a module. Angular provides several types of guards:
+
+1. CanActivate: Determines if a route can be activated. 
+2. CanActivateChild: Determines if child routes can be activated. 
+3. CanDeactivate: Determines if a route can be deactivated. 
+4. Resolve: Pre-fetches data before activating a route. 
+5. CanLoad: Determines if a module can be loaded.
+
+### Implementing a guard in Angular
+
+Let's implement a `CaActivate` guard to control access to a route based on a condition, such as whether a user is authenticated.
+
+#### Step-by-Step implementation
+
+1. Generate a Guard
+
+Use Angular CLI to generate a new guard:
+
+```bash
+ng generate guard auth
+```
+This command creates a new file named `auth.guard.ts` in the `src/app` directory.
+
+2. Implement the Guard logic
+
+Open the generated auth.guard.ts file and implement the logic. In this example, we'll use a simple authentication service to check if a user is logged in.
+
+Example:
+
+```typescript
+import { Injectable } from '@angular/core';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class AuthGuard implements CanActivate {
+
+    constructor(private authService: AuthService, private router: Router) {
+    }
+
+    canActivate(
+        next: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+        if (this.authService.isLoggedIn()) {
+            return true
+        } else {
+            this.router.navigate([ '/login' ])
+            return false
+        }
+    }
+
+}
+```
+In this example, `AuthService` is a service that contains the method `isLoggedIn()`, which checks if the user is authenticated.
+
+3. Define the AuthService
+
+Create the `AuthService` that contains the authentication logic.
+
+Example:
+
+```typescript
+import { Injectable } from '@angular/core';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class AuthService {
+    private loggedIn = false
+
+    isLoggedIn(): boolean {
+        return this.loggedIn
+    }
+
+    login() {
+        this.loggedIn = true
+    }
+
+    logout() {
+        this.loggedIn = false
+    }
+}
+```
+
+4. Add the Guard to Routes
+
+Open the routing module (e.g., `app-routing.module.ts`) and add the `AuthGuard` to the route(s) you want to protect.
+
+#### Example:
+
+```typescript
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+import { AboutComponent } from './about/about.component';
+import { ContactComponent } from './contact/contact.component';
+import { LoginComponent } from './login/login.component';
+import { AuthGuard } from './auth.guard';
+
+const routes: Routes = [
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'home', component: HomeComponent },
+  { path: 'about', component: AboutComponent },
+  { path: 'contact', component: ContactComponent, canActivate: [AuthGuard] },
+  { path: 'login', component: LoginComponent },
+  { path: '**', redirectTo: '/home' }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+```
+
+In this configuration, the `ContactComponent` route is protected by the `AuthGuard`. If the user is not logged in, they will be redirected to the `/login` route.
+
+### Summary
+1. **Generate a Guard**: Use Angular CLI to generate a guard. 
+2. **Implement the Guard Logic**: Define the logic to control route access in the guard. 
+3. **Create an AuthService**: Implement the authentication service that the guard will use. 
+4. **Add the Guard to Routes**: Apply the guard to the routes you want to protect in the routing module.
+
+By implementing guards, you can control access to various parts of your Angular application based on custom logic, such as user authentication or authorization.
 
 ## 18. What are Angular forms? Differentiate between template-driven and reactive forms in Angular.
 
@@ -1414,203 +1561,3 @@ applications based on the environment and requirements.
 ## 72. When to use Angular animations instead of CSS animations? How to animate a button click event to fade in/out a block?
 
 ## 73. What is ng-container, ng-template, ng-content, and ng-template-outlet?
-
-## 1. What is Angular, and how  it differ from AngularJS?
-
-## 2. What are Angular advantages?
-
-## 3. What is NPM?
-
-## 4. What is Angular CLI, and how is it used?
-
-## 5. What is Typescript? What are the advantages of Typescript over Javascript?
-
-## 6. Where to store static files in an Angular project?
-
-## 7. What is the role of angular.json file in Angular?
-
-## 8. Explain the architecture of an Angular application.
-
-## 10. What are Components in Angular?
-
-## 11. What is a Selector and Template?
-
-## 12. What is Module in Angular? What is app.module.ts file?
-
-## 13. How an Angular App gets Loaded and Started? What are index.html, app-root, selector, and main.ts?
-
-## 14. What is a Bootstrapped Module & Bootstrapped Component?
-
-## 15. What are Angular modules, and why are they important? Describe the role of NgModule in Angular.
-
-## 16. What is a component in Angular?
-
-## 17. How do you create a new component in Angular?
-
-## 18. Explain data binding in Angular. What are the different types of data binding in Angular?
-
-## 19. What is String Interpolation in Angular?
-
-## 20. What are services in Angular? How do you create and inject a service in Angular? Explain with an example!
-
-## 21. What is Hierarchical Dependency Injection?
-
-## 22. What is Provider in Angular?
-
-## 23. What is the role of @Injectable Decorator in a Service?
-
-## 24. Explain dependency injection in Angular. How does dependency injection work?
-
-## 26. What is an Angular directive? Differentiate between structural and attribute directives and how do you create them?
-
-## 106. What is ng-container, ng-template, ng-content, and ng-template-outlet?
-
-## 27. What are Angular pipes, and how do you use them? How do you create a custom pipe in Angular?
-
-## 28. Explain what lazy loading is in Angular and how you can lazy load components and modules in Angular. What are the benefits?
-
-## 29. What is Angular routing? How do you set up routing in an Angular application?
-
-## 30. How do you add routing to an Angular application? When can global routing be bad? What is router-outlet? How do you create a router link?
-
-## 31. What is a guard in Angular routing, and how do you implement it?
-
-## 32. What are lifecycle hooks in Angular? When are they called?
-
-## 33. What is a Constructor in Angular?
-
-## 34. What is ngOnChanges lifecycle hook in Angular?
-
-## 35. What is ngOnInit lifecycle hook in Angular? What is the difference between constructor and ngOnInit?
-
-## 37. What are Parent-Child Components?
-
-## 36. How do you handle component communication in Angular?
-
-## 40. What are the various ways to communicate between the components?
-
-## 42. What is Template Reference Variable in Angular?
-
-## 43. What is the role of ViewChild in Angular? How to access the child component from parent component with ViewChild?
-
-## 45. What is ContentChild? What is the difference between ContentChild & ContentChildren? Compare ng-Content, ViewChild, ViewChildren, ContentChild & ContentChildren?
-
-## 48. How do you use the Renderer2 service in Angular?
-
-## 49. What is Angular Ivy? How does it improve the Angular framework?
-
-## 50. Explain the purpose of Angular decorators and how do you create them?
-
-## 51. How do you test an Angular application?
-
-## 52. What are the best practices for structuring an Angular project?
-
-## 53. How do you handle state management in Angular applications?
-
-## 54. What is the purpose of the APP_INITIALIZER token in Angular?
-
-## 55. How do you implement a custom form control in Angular?
-
-## 56. What is a feature module in Angular, and how do you use it?
-
-## 57. Explain how Angular handles change detection.
-
-## 58. How do you implement a custom pipe that accepts multiple parameters?
-
-## 59. Explain the difference between an Angular module and a JavaScript module.
-
-## 60. How do you secure an Angular application?
-
-## 61. What are Angular schematics, and how are they used?
-
-## 62. Explain how to use Angular with Web Workers.
-
-## 63. How do you create a dynamic component in Angular?
-
-## 64. How do you use dependency injection tokens in Angular?
-
-## 65. What is the role of NgZone in Angular?
-
-## 66. How to execute code outside Angular change detection using ngZone? When does it make sense? Write a small example.
-
-## 67. How do you handle memory leaks in Angular applications?
-
-## 68. Explain the concept of control value accessor in Angular.
-
-## 70. What are Angular resolvers, and how do you use them?
-
-## 71. How do you handle route guards with complex conditions?
-
-## 72. Explain the use of forwardRef in Angular.
-
-## 73. How do you set up an Angular application to use service workers for offline capabilities?
-
-## 74. How do you implement internationalization (i18n) in Angular?
-
-## 75. What is Authentication & Authorization in Angular?
-
-## 76. What is JWT Token Authentication in Angular?
-
-## 77. How to Mock or Fake an API for JWT Authentication?
-
-## 78. How to implement the Authentication with JWT in Angular?
-
-## 79. What is Auth Guard?
-
-## 80. What is HTTP Interceptor? Write an example of an interceptor.
-
-## 81. How to Retry automatically if there is an error response from API?
-
-## 82. What are the parts of JWT Token?
-
-## 83. What is Postman?
-
-## 84. Which part of the request has the token stored when sending to API?
-
-## 85. What are Angular Forms? What are the type of Angular Forms?
-
-## 86. What is the difference between Template Driven Forms & Reactive Forms?
-
-## 87. How to setup Template Driven Forms?
-
-## 88. How to apply Required field validation in template driven forms?
-
-## 89. What is Form Group and Form Control in Angular?
-
-## 90. How to setup Reactive Forms?
-
-## 91. How to do validations in reactive forms?
-
-## 92. What is AOT (Ahead-Of-Time) compilation in Angular? Explain the difference between AOT (Ahead-Of-Time) and JIT (Just-In-Time) compilation.
-
-## 93. How to use environment variables in Angular?
-
-## 95. What ways of binding data exist in Angular? Provide examples.
-
-## 96. Write a DatesService with methods getTomorrow(), getYesterday(), getToday().
-
-## 97. Why is it bad to call a function in an Angular template?
-
-## 98. What is Angular generator? How to use generators?
-
-## 99. What are Angular guards? Write an example of code to protect a route with both sync and async ways.
-
-## 100. Write an example of how to inject a module with some configuration using forRoot.
-
-## 101. What is as keyword in Angular? What does it do? Did you use it with combineLatest?
-
-## 104. Create a directive that changes the background of an element.
-
-## 105. How do pipes in Angular work? What built-in pipes do you know? Create a simple pipe.
-
-## 107. How do Angular forms work? What forms are available in Angular? How do they differ?
-
-## 108. How to fix Angular input has no initializer error?
-
-## 109. What is NgRx? How does it work? Are you familiar with Redux or NgRx?
-
-## 110. How to use inject in Angular? What are the benefits?
-
-## 111. How to use standalone components in Angular? What are the benefits?
-
-## 112. How to use Angular signals? What are the benefits?
