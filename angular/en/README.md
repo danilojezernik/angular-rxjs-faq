@@ -76,7 +76,9 @@ export class AppModule {
 }
 ```
 </details>
-## 3. What are Angular modules, and why are they important? Describe the role of NgModule in Angular.
+
+<details>
+<summary><h2>3. What are Angular modules, and why are they important? Describe the role of NgModule in Angular.</h2></summary>
 
 Angular modules are a way to organize an application and manage dependencies. They help encapsulate components,
 directives, pipes, and services, making the code more modular and maintainable.
@@ -88,8 +90,9 @@ NgModule is a decorator that marks a class as an Angular module and provides met
 - **Organization**: Modules group related components and services.
 - **Reusability**: Modules can be reused across different parts of an application or even different applications.
 - **Dependency Management**: Modules manage service instances and dependencies.
+</details>
 
-## 3. How an Angular App gets Loaded and Started? What are index.html, app-root, selector and main.ts?
+## 4. How an Angular App gets Loaded and Started? What are index.html, app-root, selector and main.ts?
 
 5 Steps executed when client send request from browser:
 
