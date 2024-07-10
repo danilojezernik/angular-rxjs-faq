@@ -43,9 +43,8 @@ angular.module('myApp', [])
 
 </details>
 
-
-
-## 2. Explain the architecture of an Angular application.
+<details>
+<summary><h2>2. Explain the architecture of an Angular application.</h2></summary>
 
 An Angular application is structured as a collection of modules, components, and services.
 
@@ -76,7 +75,7 @@ import { DataService } from './data.service';
 export class AppModule {
 }
 ```
-
+</details>
 ## 3. What are Angular modules, and why are they important? Describe the role of NgModule in Angular.
 
 Angular modules are a way to organize an application and manage dependencies. They help encapsulate components,
