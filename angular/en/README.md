@@ -1441,17 +1441,20 @@ export class TemplateFormComponent {
 ```
 
 ### Reactive Forms
+
 Reactive forms, also known as model-driven forms, provide a more structured approach to handling forms by defining the
 form model explicitly in the component. This approach is suitable for complex forms with intricate validation logic.
 
 #### Characteristics of Reactive Forms
-1. **Programmatic Approach**: Forms are created and managed in the component class. 
-2. **FormControl and FormGroup**: Uses `FormControl` and `FormGroup` classes to manage form inputs and their state. 
-3. **Synchronous Validation**: Validators are defined as functions in the component class. 
+
+1. **Programmatic Approach**: Forms are created and managed in the component class.
+2. **FormControl and FormGroup**: Uses `FormControl` and `FormGroup` classes to manage form inputs and their state.
+3. **Synchronous Validation**: Validators are defined as functions in the component class.
 4. **More Control**: Provides more control over form handling, validation, and reactive changes.
 5. **Scalability**: Better suited for complex and large-scale forms.
 
 #### Example of Reactive Form
+
 #### Component (TypeScript):
 
 ```typescript
@@ -1468,7 +1471,7 @@ export class ReactiveFormComponent implements OnInit {
     ngOnInit() {
         this.myForm = new FormGroup({
             name: new FormControl('', Validators.required),
-            email: new FormControl('', [Validators.required, Validators.email])
+            email: new FormControl('', [ Validators.required, Validators.email ])
         });
     }
 
@@ -1481,44 +1484,415 @@ export class ReactiveFormComponent implements OnInit {
 #### Template (HTML):
 
 ```html
+
 <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
     <label for="name">Name:</label>
     <input type="text" id="name" formControlName="name">
-    <div *ngIf="myForm.get('name').invalid && myForm.get('name').touched">
+    <div *ngIf="myForm.get('name')!.invalid && myForm.get('name')!.touched">
         Name is required
     </div>
 
     <label for="email">Email:</label>
     <input type="email" id="email" formControlName="email">
-    <div *ngIf="myForm.get('email').invalid && myForm.get('email').touched">
+    <div *ngIf="myForm.get('email')!.invalid && myForm.get('email')!.touched">
         Enter a valid email
     </div>
 
     <button type="submit" [disabled]="myForm.invalid">Submit</button>
 </form>
 ```
+
+**Note**: There is a non-null assertion operator `!` used in the template due to the TypeScript strict null checks. So
+you are basically tell TypeScript that `get('name')` will not be null before accessing their properties.
+
 #### Differences Between Template-Driven and Reactive Forms
-| Feature                     | Template-Driven Forms                        | Reactive Forms                        |
-|-----------------------------|----------------------------------------------|---------------------------------------|
-| Approach                    | Declarative (HTML-based)                     | Programmatic (TypeScript-based)       |
-| Data Binding                | Two-way data binding using `[(ngModel)]`     | Explicit and immutable data binding   |
-| Form Model                  | Defined implicitly by directives             | Defined explicitly in component class |
-| Validation                  | Asynchronous, defined in templates           | Synchronous, defined in component class |
-| Control over Form Structure | Less control, suitable for simpler forms     | More control, suitable for complex forms |
-| Boilerplate Code            | Less boilerplate code                        | More boilerplate code, but more robust |
-| Change Detection Strategy   | Angular change detection                     | Reactive, observable-based            |
+
+| Feature                     | Template-Driven Forms                    | Reactive Forms                           |
+|-----------------------------|------------------------------------------|------------------------------------------|
+| Approach                    | Declarative (HTML-based)                 | Programmatic (TypeScript-based)          |
+| Data Binding                | Two-way data binding using `[(ngModel)]` | Explicit and immutable data binding      |
+| Form Model                  | Defined implicitly by directives         | Defined explicitly in component class    |
+| Validation                  | Asynchronous, defined in templates       | Synchronous, defined in component class  |
+| Control over Form Structure | Less control, suitable for simpler forms | More control, suitable for complex forms |
+| Boilerplate Code            | Less boilerplate code                    | More boilerplate code, but more robust   |
+| Change Detection Strategy   | Angular change detection                 | Reactive, observable-based               |
 
 ### When to Use Which Approach
-- **Template-Driven Forms**: Use when you have simple forms and want to leverage Angular's data-binding with minimal TypeScript code.
-- **Reactive Forms**: Use when dealing with complex forms, custom validation logic, or if you need more control over the form's behavior and structure.
 
-By understanding the differences and characteristics of both template-driven and reactive forms, you can choose the appropriate approach for your specific use case in Angular applications.
+- **Template-Driven Forms**: Use when you have simple forms and want to leverage Angular's data-binding with minimal
+  TypeScript code.
+- **Reactive Forms**: Use when dealing with complex forms, custom validation logic, or if you need more control over the
+  form's behavior and structure.
+
+By understanding the differences and characteristics of both template-driven and reactive forms, you can choose the
+appropriate approach for your specific use case in Angular applications.
 
 ## 19. What are the all the validation options for forms in angular and how to do a custom validators?
 
+### Template-Driven Validators
 
+Template-driven forms rely on Angular's directives to handle validation directly within the HTML template.
+
+#### Common Validators
+
+1. Required Validator
+
+```html
+<input type="text" name="name" ngModel required>
+```
+
+2. Minimum Length Validator
+
+```html
+<input type="text" name="name" ngModel minlength="3">
+```
+
+3. Maximum Length Validator
+
+```html
+<input type="text" name="name" ngModel maxlength="20">
+```
+
+4. Pattern Validator
+
+```html
+<input type="text" name="name" ngModel pattern="[a-zA-Z ]*">
+```
+
+5. Email Validator
+
+```html
+<input type="email" name="email" ngModel required email>
+```
+
+#### Example
+
+In the template-driven form example using `ngModel`, the `myForm.controls['name']` and `myForm.controls['email']` are
+checked
+with the optional chaining operator `?.`. This ensures that if `controls['name']` or `controls['email']` is `null`
+or `undefined`,
+it does not throw an error and instead safely returns undefined. This way, TypeScript does not raise any issues because
+it knows that the expression can handle `null` or `undefined` values.
+
+#### Template (HTML):
+
+```html
+
+<form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" ngModel required minlength="3" maxlength="20">
+    <div *ngIf="myForm.controls['name']?.invalid && myForm.controls['name']?.touched">
+        <div *ngIf="myForm.controls['name']?.errors?.['required']">Name is required.</div>
+        <div *ngIf="myForm.controls['name']?.errors?.['minlength']">Name must be at least 3 characters long.</div>
+        <div *ngIf="myForm.controls['name']?.errors?.['maxlength']">Name cannot be more than 20 characters long.</div>
+    </div>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" ngModel required email>
+    <div *ngIf="myForm.controls['email']?.invalid && myForm.controls['email']?.touched">
+        <div *ngIf="myForm.controls['email']?.errors?.['required']">Email is required.</div>
+        <div *ngIf="myForm.controls['email']?.errors?.['email']">Enter a valid email.</div>
+    </div>
+
+    <button type="submit" [disabled]="myForm.invalid">Submit</button>
+</form>
+```
+
+#### Component (TypeScript):
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+    selector: 'app-template-form',
+    templateUrl: './template-form.component.html'
+})
+export class TemplateFormComponent {
+    onSubmit(form: any) {
+        console.log('Form Submitted!', form.value);
+    }
+}
+```
+
+### Reactive Form Validation
+
+Reactive forms use explicit form model management in the component class. This approach is suitable for more complex
+forms and provides greater control over form validation.
+
+#### Common Validators
+
+1. Required Validator
+
+```typescript
+Validators.required
+``` 
+
+2. Minimum Length Validator
+
+```typescript
+Validators.minLength(minLength)
+```
+
+3. Maximum Length Validator
+
+```typescript
+Validators.maxLength(maxLength)
+```
+
+4. Pattern Validator
+
+```typescript
+Validators.pattern('[a-zA-Z ]*')
+```
+
+5. Email Validator
+
+```typescript
+Validators.email
+```
+
+#### Example
+
+In the reactive form example, TypeScript enforces stricter null checks and does not assume that `get('name')`
+or `get('email')` will always return a valid form control. As a result, you need to use the non-null assertion
+operator `!` to assert that these controls are not null.
+
+#### Component (TypeScript):
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+@Component({
+    selector: 'app-reactive-form',
+    templateUrl: './reactive-form.component.html'
+})
+export class ReactiveFormComponent implements OnInit {
+    myForm!: FormGroup;
+
+    ngOnInit() {
+        this.myForm = new FormGroup({
+            name: new FormControl('', [ Validators.required, Validators.minLength(3), Validators.maxLength(20) ]),
+            email: new FormControl('', [ Validators.required, Validators.email ])
+        });
+    }
+
+    onSubmit() {
+        console.log('Form Submitted!', this.myForm.value);
+    }
+}
+```
+
+#### Template (HTML):
+
+```html
+
+<form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+    <label for="name">Name:</label>
+    <input type="text" id="name" formControlName="name">
+    <div *ngIf="myForm.get('name')!.invalid && myForm.get('name')!.touched">
+        <div *ngIf="myForm.get('name')!.errors?.['required']">Name is required.</div>
+        <div *ngIf="myForm.get('name')!.errors?.['minlength']">Name must be at least 3 characters long.</div>
+        <div *ngIf="myForm.get('name')!.errors?.['maxlength']">Name cannot be more than 20 characters long.</div>
+    </div>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" formControlName="email">
+    <div *ngIf="myForm.get('email')!.invalid && myForm.get('email')!.touched">
+        <div *ngIf="myForm.get('email')!.errors?.['required']">Email is required.</div>
+        <div *ngIf="myForm.get('email')!.errors?.['email']">Enter a valid email.</div>
+    </div>
+
+    <button type="submit" [disabled]="myForm.invalid">Submit</button>
+</form>
+```
+
+### Custom Validators
+
+Custom validators can be created for both template-driven and reactive forms to handle specific validation logic.
+
+### Synchronous Custom Validator
+
+#### Example: Forbidden Name Validator
+
+1. Create the Validator Function:
+
+```typescript
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+
+export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+        const forbidden = nameRe.test(control.value);
+        return forbidden ? { forbiddenName: { value: control.value } } : null;
+    };
+}
+```
+
+2. Use the Custom Validator in Reactive Forms:
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { forbiddenNameValidator } from './forbidden-name.validator';
+
+@Component({
+    selector: 'app-reactive-form',
+    templateUrl: './reactive-form.component.html'
+})
+export class ReactiveFormComponent implements OnInit {
+    myForm!: FormGroup;
+
+    ngOnInit() {
+        this.myForm = new FormGroup({
+            name: new FormControl('', [ Validators.required, Validators.minLength(3), Validators.maxLength(20), forbiddenNameValidator(/bob/i) ]),
+            email: new FormControl('', [ Validators.required, Validators.email ])
+        });
+    }
+
+    onSubmit() {
+        console.log('Form Submitted!', this.myForm.value);
+    }
+}
+```
+
+Template (HTML):
+
+```html
+
+<form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+    <label for="name">Name:</label>
+    <input type="text" id="name" formControlName="name">
+    <div *ngIf="myForm.get('name')!.invalid && myForm.get('name')!.touched">
+        <div *ngIf="myForm.get('name')!.errors?.['required']">Name is required.</div>
+        <div *ngIf="myForm.get('name')!.errors?.['minlength']">Name must be at least 3 characters long.</div>
+        <div *ngIf="myForm.get('name')!.errors?.['maxlength']">Name cannot be more than 20 characters long.</div>
+        <div *ngIf="myForm.get('name')!.errors?.['forbiddenName']">Name "bob" is forbidden.</div>
+    </div>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" formControlName="email">
+    <div *ngIf="myForm.get('email')!.invalid && myForm.get('email')!.touched">
+        <div *ngIf="myForm.get('email')!.errors?.['required']">Email is required.</div>
+        <div *ngIf="myForm.get('email')!.errors?.['email']">Enter a valid email.</div>
+    </div>
+
+    <button type="submit" [disabled]="myForm.invalid">Submit</button>
+</form>
+```
+
+### Asynchronous Custom Validator
+
+#### Example: Unique Username Validator
+
+1. Create the Validator Function:
+
+```typescript
+import { AbstractControl, ValidationErrors } from '@angular/forms'; // Import necessary types from Angular forms
+import { Observable, of } from 'rxjs'; // Import Observable and 'of' function from RxJS
+import { delay, map } from 'rxjs/operators'; // Import delay and map operators from RxJS
+
+// Define a custom validator function to check for unique usernames
+export function uniqueUsernameValidator(existingUsernames: string[]): (control: AbstractControl) => Observable<ValidationErrors | null> {
+    // The function returns another function that takes an AbstractControl and returns an Observable of ValidationErrors or null
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+        // Create an observable from the existing usernames array
+        return of(existingUsernames).pipe(
+            delay(1000), // Simulate a server delay of 1000ms (1 second)
+            map(usernames => {
+                // Check if the control's value is in the existing usernames array
+                const isUnique = !usernames.includes(control.value);
+                // If the username is unique, return null (no error)
+                // If the username is not unique, return a validation error object
+                return isUnique ? null : { uniqueUsername: { value: control.value } };
+            })
+        );
+    };
+}
+
+```
+
+2. Use the Custom Validator in Reactive Forms:
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms'; // Import necessary Angular form classes and validators
+import { uniqueUsernameValidator } from './unique-username.validator'; // Import the custom validator
+
+@Component({
+    selector: 'app-reactive-form',
+    templateUrl: './reactive-form.component.html' // Path to the component's template file
+})
+export class ReactiveFormComponent implements OnInit {
+    myForm!: FormGroup; // Declare a FormGroup property to manage the form
+    existingUsernames = [ 'john', 'jane', 'admin' ]; // Define an array of existing usernames for validation
+
+    // Initialize the form group and controls when the component initializes
+    ngOnInit() {
+        this.myForm = new FormGroup({
+            username: new FormControl('', {
+                validators: [ Validators.required ], // Add a required validator to the username field
+                asyncValidators: [ uniqueUsernameValidator(this.existingUsernames) ], // Add the custom async validator for unique username
+                updateOn: 'blur' // Run async validation when the input field loses focus
+            }),
+            email: new FormControl('', [ Validators.required, Validators.email ]) // Add required and email validators to the email field
+        });
+    }
+
+    // Function to handle form submission
+    onSubmit() {
+        // Log the form's value to the console if the form is submitted
+        console.log('Form Submitted!', this.myForm.value);
+    }
+}
+
+```
+
+#### Template (HTML):
+
+```html
+
+<form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+    <label for="username">Username:</label>
+    <input type="text" id="username" formControlName="username">
+    <div *ngIf="myForm.get('username')!.invalid && myForm.get('username')!.touched">
+        <div *ngIf="myForm.get('username')!.errors?.['required']">Username is required.</div>
+        <div *ngIf="myForm.get('username')!.errors?.['uniqueUsername']">This username is already taken.</div>
+    </div>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" formControlName="email">
+    <div *ngIf="myForm.get('email')!.invalid && myForm.get('email')!.touched">
+        <div *ngIf="myForm.get('email')!.errors?.['required']">Email is required.</div>
+        <div *ngIf="myForm.get('email')!.errors?.['email']">Enter a valid email.</div>
+    </div>
+
+    <button type="submit" [disabled]="myForm.invalid">Submit</button>
+</form>
+```
+
+#### Summary
+
+- **Template-Driven Forms**: Use Angular directives `(ngModel)` and handle null/undefined values with the optional
+  chaining operator `?.`. This ensures that any attempt to access properties on potentially undefined objects does not
+  result in an error.
+- **Reactive Forms**: Use explicit form model management (`FormGroup`, `FormControl`) and require the non-null assertion
+  operator `!` to assure TypeScript that form controls are not null. This informs TypeScript that the value will not be
+  null, preventing runtime errors and ensuring type safety.
+- **Custom Validators**: Create both synchronous and asynchronous custom validators to handle specific validation logic.
+  Implement custom validation logic and use it in reactive forms to enhance form validation capabilities.
 
 ## 20. What is Angular Universal? Explain the concept of server-side rendering in Angular.
+
+Angular Universal is a technology that enables server-side rendering (SSR) for Angular applications. It allows Angular
+applications to be rendered on the server instead of the client’s browser, which can improve performance, search engine
+optimization (SEO), and accessibility.
+
+### Concept of Server-Side Rendering (SSR) in Angular
+
+Server-side rendering (SSR) is a technique where the HTML for a web page is generated on the server instead of in the
+client’s browser. This pre-rendered HTML is then sent to the client, allowing the page to be displayed more quickly. In
+the context of Angular, SSR involves rendering the Angular application on the server and then sending the generated HTML
+to the client.
 
 ## 21. How do you handle HTTP requests in Angular? What is the HttpClientModule, and how do you use it?
 
