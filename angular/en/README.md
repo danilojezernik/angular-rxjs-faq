@@ -2938,9 +2938,61 @@ export class MyComponent {
 ```
 **Why?** This reduces the number of change detection cycles, improving performance by limiting unnecessary checks.
 
-### 5. Pure Pipes
-### 6. Optimize Template Expressions
+### 4. Pure Pipes
+
+**Pipes**: Use pure pipes, which are only recalculated when the input data changes, to avoid unnecessary calculations.
+
+```typescript
+@Pipe({
+  name: 'purePipe',
+  pure: true
+})
+export class PurePipe implements PipeTransform {
+  transform(value: any): any {
+    // transformation logic
+  }
+}
+```
+**Why?** Pure pipes optimize performance by reducing the number of times a pipe needs to be recalculated.
+
+### 5. Optimize Template Expressions
+
+**Template Expressions**: Keep expressions in templates simple and perform complex calculations in the component class.
+
+```html
+<!-- Inefficient -->
+<div>{{ complexCalculation() }}</div>
+
+<!-- Efficient -->
+<div>{{ calculatedValue }}</div>
+```
+```typescript
+export class MyComponent {
+  calculatedValue = this.complexCalculation();
+
+  complexCalculation() {
+    // complex logic
+  }
+}
+```
+**Why?** Simple template expressions avoid recalculations and improve rendering performance.
+
 ### 7. Use trackBy with ngFor
+
+trackBy Function: Implement a trackBy function with ngFor to help Angular identify items uniquely, reducing the amount of DOM manipulation.
+
+```html
+<div *ngFor="let item of items; trackBy: trackById">
+  {{ item.name }}
+</div>
+```
+```typescript
+trackById(index: number, item: any): number {
+  return item.id;
+}
+```
+**Why?** Using trackBy prevents Angular from re-rendering the entire list when items are added or removed, thus improving performance.
+
 ### 8. Service Workers and PWA
 ### 9. Optimize Third-Party Libraries
 ### 10. Preloading Strategy
