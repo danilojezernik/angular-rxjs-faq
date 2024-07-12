@@ -2979,7 +2979,7 @@ export class MyComponent {
 
 ### 7. Use trackBy with ngFor
 
-trackBy Function: Implement a trackBy function with ngFor to help Angular identify items uniquely, reducing the amount of DOM manipulation.
+**trackBy Function**: Implement a `trackBy` function with ngFor to help Angular identify items uniquely, reducing the amount of DOM manipulation.
 
 ```html
 <div *ngFor="let item of items; trackBy: trackById">
@@ -2993,13 +2993,55 @@ trackById(index: number, item: any): number {
 ```
 **Why?** Using trackBy prevents Angular from re-rendering the entire list when items are added or removed, thus improving performance.
 
-### 8. Service Workers and PWA
-### 9. Optimize Third-Party Libraries
-### 10. Preloading Strategy
+### 8. Preloading Strategy
+
+**Preloading**: Use Angular's preloading strategies to load lazy-loaded modules after the application has been bootstrapped.
+
+```typescript
+const routes: Routes = [
+    {
+        path: 'feature',
+        loadChildren: () => import('./feature/feature.module').then(m => m.FeatureModule)
+    }
+];
+
+@NgModule({
+    imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
+    exports: [RouterModule]
+})
+export class AppRoutingModule {}
+```
+**Why?** Preloading improves user experience by loading modules in the background, making them available when needed without additional wait time.
+
 ### 11. Server-Side Rendering (SSR)
+
+**Angular Universal**: Implement server-side rendering to improve initial load time and SEO.
+
+```bash
+ng add @nguniversal/express-engine
+```
+**Why?** SSR improves performance by pre-rendering the application on the server, providing faster initial page loads.
+
 ### 12. Profiling and Monitoring
+
+**Profiling**: Use tools like Angular DevTools, Chrome DevTools, and Lighthouse to identify bottlenecks and optimize performance.
+
+**Why?** Profiling helps in identifying performance issues and areas for improvement.
+
 ### 13. Optimizing Images and Assets
+
+**Image Optimization**: Compress images, use modern formats like WebP, and implement lazy loading for images.
+
+```html
+<img [src]="imageSrc" loading="lazy" />
+```
+**Why?** Optimized images and lazy loading reduce the amount of data the browser needs to download, improving load times.
+
 ### 14. Network Optimization
+
+**Network Optimizations**: Use HTTP/2, leverage CDN, and enable gzip compression on the server.
+
+**Why?** Network optimizations improve performance by reducing the time taken to transfer resources over the network.
 
 ## 28. What are Angular interceptors, and how do you use them? Write an example of an interceptor and how to handle error with interceptor.
 
