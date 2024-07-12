@@ -2893,18 +2893,61 @@ performance.
 ## 27. How do you optimize the performance of an Angular application?
 
 ### 1. Lazy Loading
-### 2. Tree Shaking
+**Lazy Loading Modules**: Load feature modules only when they are needed instead of all at once, which reduces the initial load time.
+
+```typescript
+const routes: Routes = [
+  {
+    path: 'feature',
+    loadChildren: () => import('./feature/feature.module').then(m => m.FeatureModule)
+  }
+];
+```
+**Why?** Lazy loading helps in splitting the application into smaller chunks that are loaded on demand, making the initial load faster.
+
+### 2. Standalone components
+
+**Standalone Components**: Use standalone components to reduce module dependencies and increase reusability.
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+    selector: 'app-standalone-component',
+    template: `<h1>Standalone Component</h1>`,
+    standalone: true
+})
+export class StandaloneComponent {}
+```
+
+**Why?** Standalone components simplify module management, increase reusability, and can be loaded more efficiently, improving overall performance.
+
 ### 3. OnPush Change Detection Strategy
-### 4. Pure Pipes
-### 5. Optimize Template Expressions
-### 6. Use trackBy with ngFor
-### 7. Service Workers and PWA
-### 8. Optimize Third-Party Libraries
-### 9. Preloading Strategy
-### 10. Server-Side Rendering (SSR)
-### 11. Profiling and Monitoring
-### 12. Optimizing Images and Assets
-### 11. Network Optimization
+
+**Change Detection Strategy**: Use `OnPush` to tell Angular to only check the component and its subtree when the component's inputs change.
+
+```typescript
+@Component({
+    selector: 'app-my-component',
+    templateUrl: './my-component.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class MyComponent {
+    @Input() data: any;
+}
+```
+**Why?** This reduces the number of change detection cycles, improving performance by limiting unnecessary checks.
+
+### 5. Pure Pipes
+### 6. Optimize Template Expressions
+### 7. Use trackBy with ngFor
+### 8. Service Workers and PWA
+### 9. Optimize Third-Party Libraries
+### 10. Preloading Strategy
+### 11. Server-Side Rendering (SSR)
+### 12. Profiling and Monitoring
+### 13. Optimizing Images and Assets
+### 14. Network Optimization
 
 ## 28. What are Angular interceptors, and how do you use them? Write an example of an interceptor and how to handle error with interceptor.
 
