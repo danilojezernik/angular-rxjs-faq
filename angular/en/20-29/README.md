@@ -728,17 +728,21 @@ performance.
 ## 25. How do you optimize the performance of an Angular application?
 
 ### 1. Lazy Loading
-**Lazy Loading Modules**: Load feature modules only when they are needed instead of all at once, which reduces the initial load time.
+
+**Lazy Loading Modules**: Load feature modules only when they are needed instead of all at once, which reduces the
+initial load time.
 
 ```typescript
 const routes: Routes = [
-  {
-    path: 'feature',
-    loadChildren: () => import('./feature/feature.module').then(m => m.FeatureModule)
-  }
+    {
+        path: 'feature',
+        loadChildren: () => import('./feature/feature.module').then(m => m.FeatureModule)
+    }
 ];
 ```
-**Why?** Lazy loading helps in splitting the application into smaller chunks that are loaded on demand, making the initial load faster.
+
+**Why?** Lazy loading helps in splitting the application into smaller chunks that are loaded on demand, making the
+initial load faster.
 
 ### 2. Standalone components
 
@@ -752,14 +756,17 @@ import { Component } from '@angular/core';
     template: `<h1>Standalone Component</h1>`,
     standalone: true
 })
-export class StandaloneComponent {}
+export class StandaloneComponent {
+}
 ```
 
-**Why?** Standalone components simplify module management, increase reusability, and can be loaded more efficiently, improving overall performance.
+**Why?** Standalone components simplify module management, increase reusability, and can be loaded more efficiently,
+improving overall performance.
 
 ### 3. OnPush Change Detection Strategy
 
-**Change Detection Strategy**: Use `OnPush` to tell Angular to only check the component and its subtree when the component's inputs change.
+**Change Detection Strategy**: Use `OnPush` to tell Angular to only check the component and its subtree when the
+component's inputs change.
 
 ```typescript
 @Component({
@@ -771,6 +778,7 @@ export class MyComponent {
     @Input() data: any;
 }
 ```
+
 **Why?** This reduces the number of change detection cycles, improving performance by limiting unnecessary checks.
 
 ### 4. Pure Pipes
@@ -779,15 +787,16 @@ export class MyComponent {
 
 ```typescript
 @Pipe({
-  name: 'purePipe',
-  pure: true
+    name: 'purePipe',
+    pure: true
 })
 export class PurePipe implements PipeTransform {
-  transform(value: any): any {
-    // transformation logic
-  }
+    transform(value: any): any {
+        // transformation logic
+    }
 }
 ```
+
 **Why?** Pure pipes optimize performance by reducing the number of times a pipe needs to be recalculated.
 
 ### 5. Optimize Template Expressions
@@ -801,36 +810,51 @@ export class PurePipe implements PipeTransform {
 <!-- Efficient -->
 <div>{{ calculatedValue }}</div>
 ```
+
 ```typescript
 export class MyComponent {
-  calculatedValue = this.complexCalculation();
+    calculatedValue = this.complexCalculation();
 
-  complexCalculation() {
-    // complex logic
-  }
+    complexCalculation() {
+        // complex logic
+    }
 }
 ```
+
 **Why?** Simple template expressions avoid recalculations and improve rendering performance.
 
 ### 7. Use trackBy with ngFor
 
-**trackBy Function**: Implement a `trackBy` function with ngFor to help Angular identify items uniquely, reducing the amount of DOM manipulation.
+**trackBy Function**: Implement a `trackBy` function with ngFor to help Angular identify items uniquely, reducing the
+amount of DOM manipulation.
 
 ```html
+
 <div *ngFor="let item of items; trackBy: trackById">
-  {{ item.name }}
+    {{ item.name }}
 </div>
 ```
+
 ```typescript
-trackById(index: number, item: any): number {
-  return item.id;
+trackById(index
+:
+number, item
+:
+any
+):
+number
+{
+    return item.id;
 }
 ```
-**Why?** Using trackBy prevents Angular from re-rendering the entire list when items are added or removed, thus improving performance.
+
+**Why?** Using trackBy prevents Angular from re-rendering the entire list when items are added or removed, thus
+improving performance.
 
 ### 8. Preloading Strategy
 
-**Preloading**: Use Angular's preloading strategies to load lazy-loaded modules after the application has been bootstrapped.
+**Preloading**: Use Angular's preloading strategies to load lazy-loaded modules after the application has been
+bootstrapped.
 
 ```typescript
 const routes: Routes = [
@@ -841,12 +865,15 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
-    exports: [RouterModule]
+    imports: [ RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }) ],
+    exports: [ RouterModule ]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}
 ```
-**Why?** Preloading improves user experience by loading modules in the background, making them available when needed without additional wait time.
+
+**Why?** Preloading improves user experience by loading modules in the background, making them available when needed
+without additional wait time.
 
 ### 11. Server-Side Rendering (SSR)
 
@@ -855,11 +882,13 @@ export class AppRoutingModule {}
 ```bash
 ng add @nguniversal/express-engine
 ```
+
 **Why?** SSR improves performance by pre-rendering the application on the server, providing faster initial page loads.
 
 ### 12. Profiling and Monitoring
 
-**Profiling**: Use tools like Angular DevTools, Chrome DevTools, and Lighthouse to identify bottlenecks and optimize performance.
+**Profiling**: Use tools like Angular DevTools, Chrome DevTools, and Lighthouse to identify bottlenecks and optimize
+performance.
 
 **Why?** Profiling helps in identifying performance issues and areas for improvement.
 
@@ -868,9 +897,11 @@ ng add @nguniversal/express-engine
 **Image Optimization**: Compress images, use modern formats like WebP, and implement lazy loading for images.
 
 ```html
-<img [src]="imageSrc" loading="lazy" />
+<img [src]="imageSrc" loading="lazy"/>
 ```
-**Why?** Optimized images and lazy loading reduce the amount of data the browser needs to download, improving load times.
+
+**Why?** Optimized images and lazy loading reduce the amount of data the browser needs to download, improving load
+times.
 
 ### 14. Network Optimization
 
@@ -880,7 +911,9 @@ ng add @nguniversal/express-engine
 
 ## 26. What are Angular interceptors, and how do you use them?
 
-Angular interceptors are a powerful feature provided by Angular's `HttpClient` module that allows you to intercept and modify HTTP requests and responses. They are commonly used for tasks such as adding authentication tokens, logging, error handling, and modifying request headers.
+Angular interceptors are a powerful feature provided by Angular's `HttpClient` module that allows you to intercept and
+modify HTTP requests and responses. They are commonly used for tasks such as adding authentication tokens, logging,
+error handling, and modifying request headers.
 
 ### How to Use Angular Interceptors
 
@@ -960,9 +993,10 @@ import { AuthInterceptor } from './interceptors/auth.service'
             multi: true
         }
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [ AppComponent ]
 })
-export class AppModule { }
+export class AppModule {
+}
 ```
 
 ### Explanation
@@ -970,7 +1004,8 @@ export class AppModule { }
 #### Creating the Interceptor Service:
 
 - The `AuthInterceptor` class implements the `HttpInterceptor` interface
-- The `intercept` method takes two parameters: `req` (the outgoing request) and `next` (the next interceptor in the chain)
+- The `intercept` method takes two parameters: `req` (the outgoing request) and `next` (the next interceptor in the
+  chain)
 - The `req.clone` method is used to clone the original request and modify it by adding an `Authorization` header
 - The modified request is passed to the `next.handle` method to continue the request chain
 
@@ -988,19 +1023,23 @@ export class AppModule { }
 - **Modifying Requests**: Modify request headers, URL, or body before sending the request
 - **Caching**: Implement caching mechanisms for HTTP requests
 
-By leveraging Angular interceptors, you can effectively manage and manipulate HTTP requests and responses, providing a centralized and reusable solution for common tasks in your application.
+By leveraging Angular interceptors, you can effectively manage and manipulate HTTP requests and responses, providing a
+centralized and reusable solution for common tasks in your application.
 
 ## 27. How do you use environment variables in Angular?
 
 # Using Environment Variables in Angular
 
-In Angular, environment variables are used to store configuration settings that can change based on the environment (development, staging, production, etc.). This guide explains how to set up and use environment variables in an Angular project.
+In Angular, environment variables are used to store configuration settings that can change based on the environment (
+development, staging, production, etc.). This guide explains how to set up and use environment variables in an Angular
+project.
 
 ## Step-by-Step Guide
 
 ### 1. Create Environment Files
 
 Angular CLI generates two environment files by default:
+
 - `src/environments/environment.ts`
 - `src/environments/environment.prod.ts`
 
@@ -1025,7 +1064,9 @@ export const environment = {
 ```
 
 ### 3. Add Environment Configuration to Angular CLI:
-In `angular.json`, configure the file replacements based on the environment. This tells Angular CLI to replace the default environment file with the appropriate one during the build process.
+
+In `angular.json`, configure the file replacements based on the environment. This tells Angular CLI to replace the
+default environment file with the appropriate one during the build process.
 
 ```json
 {
@@ -1061,6 +1102,7 @@ In `angular.json`, configure the file replacements based on the environment. Thi
 ```
 
 ### 4. Use Environment Variables in Your Code:
+
 Import the environment object into your Angular components or services to use the environment variables.
 
 ```typescript
@@ -1070,7 +1112,7 @@ import { environment } from '../environments/environment'
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css']
+    styleUrls: [ './app.component.css' ]
 })
 export class AppComponent implements OnInit {
     apiUrl: string = environment.apiUrl
@@ -1100,6 +1142,7 @@ Add a script to your `package.json` file to set the environment variable before 
 ```
 
 ### 6. Build the Application:
+
 Build your application using the Angular CLI command for the specific environment:
 
 ```bash
@@ -1108,15 +1151,19 @@ ng build --configuration=<name-of-the-environment>
 ```
 
 ### Example
-Suppose you have a development, staging, and production environment. You would create three files in the `src/environments` directory:
+
+Suppose you have a development, staging, and production environment. You would create three files in
+the `src/environments` directory:
 
 - `environment.ts` (for development)
 - `environment.<name-of-the-environment>.ts `
 - `environment.prod.ts`
 
-Define the environment variables in each file, then configure the file replacements in `angular.json` under the `build` section. Finally, use the environment object in your code to access the variables.
+Define the environment variables in each file, then configure the file replacements in `angular.json` under the `build`
+section. Finally, use the environment object in your code to access the variables.
 
-This setup allows you to manage different configurations for different environments efficiently, ensuring that the correct settings are used during the build process.
+This setup allows you to manage different configurations for different environments efficiently, ensuring that the
+correct settings are used during the build process.
 
 ## 28. What is AOT (Ahead-Of-Time) compilation in Angular? Explain the difference between AOT (Ahead-Of-Time) and JIT (Just-In-Time) compilation.
 
@@ -1196,4 +1243,162 @@ application and its templates are compiled in the browser at runtime. This was t
 Understanding the differences between AOT and JIT compilation helps in optimizing the build and performance of Angular
 applications based on the environment and requirements.
 
-## 29. Explain the role of the ngOnInit lifecycle hook. What are the different lifecycle hooks in Angular?
+## 29. Explain the role of the ngOnInit lifecycle hook and when to use it and when not to use it and why? What are the different lifecycle hooks in Angular?
+
+In Angular, lifecycle hooks are methods that allow you to tap into key events in the lifecycle of a component or
+directive, such as initialization, changes to input properties, and destruction. These hooks enable you to manage
+resources, initialize data, and perform cleanup tasks at appropriate times.
+
+### ngOnInit Lifecycle Hook
+
+The `ngOnInit` lifecycle hook is one of the most commonly used hooks in Angular. It is called once after the first
+`ngOnChanges` hook and before the component is displayed. The `ngOnInit` method is a good place to perform component
+initialization logic, such as fetching data from a server, initializing properties, or setting up subscriptions.
+
+#### Example usage of ngOnInit:
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+    selector: 'app-example',
+    templateUrl: './example.component.html',
+    styleUrls: [ './example.component.css' ]
+})
+export class ExampleComponent implements OnInit {
+    data: any;
+
+    constructor(private dataService: DataService) {
+    }
+
+    ngOnInit() {
+        this.dataService.getData().subscribe(data => {
+            this.data = data
+        })
+    }
+}
+```
+
+### When to Use and When Not to Use `ngOnInit` and Why
+
+#### When to Use `ngOnInit`
+
+1. **Initialization Logic**:
+
+- Use `ngOnInit` for initialization logic that should occur only once, such as fetching initial data from a service,
+  setting up initial values for component properties, or initializing complex objects.
+
+```typescript
+ngOnInit()
+{
+    this.dataService.getData().subscribe(data => {
+        this.data = data
+    })
+}
+```
+
+2. **Setting up Subscriptions**:
+
+- Use `ngOnInit` to set up any subscriptions to Observables or other asynchronous data streams that the component
+  depends on.
+
+3. **Component Interaction**:
+
+Use `ngOnInit` when you need to perform actions that rely on input properties being set. By the time `ngOnInit` runs,
+Angular has finished setting the input properties.
+
+### When Not to Use ngOnInit
+
+1. **Avoid Logic in Constructor**:
+
+- Do not use `ngOnInit` for logic that belongs in the constructor. The constructor should only be used for simple
+  initialization like wiring up dependencies.
+
+```typescript
+constructor(private
+dataService: DataService
+)
+{
+}
+```
+
+2. **Avoid Repeated Logic**:
+
+Avoid putting logic in ngOnInit that should be executed multiple times. For example, if you need to react to changes in
+input properties, use ngOnChanges instead.
+
+```typescript
+ngOnChanges(changes
+:
+SimpleChanges
+)
+{
+    if (changes['inputProperty']) {
+        // React to the input property change
+    }
+}
+```
+
+3. **Avoid Heavy Computation**:
+
+- Do not use ngOnInit for heavy computational tasks. Such tasks should be handled in a more appropriate lifecycle hook
+  or in a service to keep the component lightweight.
+
+### Summary
+
+Using `ngOnInit` properly helps in setting up the component's initial state, ensuring that it is ready for interaction
+and data display. It is crucial to understand when to use ngOnInit and when not to, to maintain the efficiency and
+readability of your code.
+
+- Use `ngOnInit` for one-time initialization tasks, such as fetching data, setting up subscriptions, and performing
+  actions that depend on the component’s input properties.
+- Avoid using `ngOnInit` for tasks that belong in the constructor, tasks that need to be executed multiple times, or
+  heavy computational tasks that could impact performance.
+
+### Different Lifecycle Hooks in Angular
+
+#### ngOnChanges(changes: SimpleChanges)
+
+- Called before `ngOnInit` and whenever one or more data-bound input properties change.
+- Receives a `SimpleChanges` object which contains the current and previous values of the changed properties.
+
+#### ngOnInit()
+
+- Called once, after the first `ngOnChanges`. This is the place for component initialization logic.
+
+#### ngDoCheck()
+
+- Called during every change detection run, immediately after `ngOnChanges` and `ngOnInit`.
+- Allows you to implement custom change detection.
+
+#### ngAfterContentInit()
+
+- Called once after the first `ngDoCheck`. This is called after Angular projects external content into the component's
+  view.
+
+#### ngAfterContentChecked()
+
+- Called after `ngAfterContentInit` and every subsequent `ngDoCheck`. This is called after Angular checks the content
+  projected into the component.
+
+#### ngAfterViewInit()
+
+- Called once after the first `ngAfterContentChecked`. This is called after Angular initializes the component's view and
+  child views.
+
+#### ngAfterViewChecked()
+
+- Called after `ngAfterViewInit` and every subsequent `ngAfterContentChecked`. This is called after Angular checks the
+  component's view and child views.
+
+#### ngOnDestroy()
+
+- Called once, just before the component is destroyed. This is the place for cleanup logic, such as unsubscribing from
+  observables and detaching event handlers.
+
+#### Summary
+
+Lifecycle hooks in Angular provide a structured way to perform actions at various points in a component's lifecycle.
+The `ngOnInit` hook is particularly important for initializing data and setting up the component when it is first
+created. By leveraging these hooks, developers can ensure that their components behave predictably and efficiently
+manage resources.

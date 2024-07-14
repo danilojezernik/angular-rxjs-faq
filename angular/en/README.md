@@ -30,7 +30,7 @@
 26. What are Angular interceptors, and how do you use them?
 27. How do you use environment variables in Angular?
 28. What is AOT (Ahead-Of-Time) compilation in Angular? Explain the difference between AOT (Ahead-Of-Time) and JIT (Just-In-Time) compilation.
-29. Explain the role of the ngOnInit lifecycle hook. What are the different lifecycle hooks in Angular?
+29. Explain the role of the ngOnInit lifecycle hook and when to use it and when not to use it and why? What are the different lifecycle hooks in Angular?
 
 
 30. How do you handle component communication in Angular?
