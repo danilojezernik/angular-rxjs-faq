@@ -3043,7 +3043,118 @@ ng add @nguniversal/express-engine
 
 **Why?** Network optimizations improve performance by reducing the time taken to transfer resources over the network.
 
-## 28. What are Angular interceptors, and how do you use them? Write an example of an interceptor and how to handle error with interceptor.
+## 28. What are Angular interceptors, and how do you use them?
+
+Angular interceptors are a powerful feature provided by Angular's `HttpClient` module that allows you to intercept and modify HTTP requests and responses. They are commonly used for tasks such as adding authentication tokens, logging, error handling, and modifying request headers.
+
+### How to Use Angular Interceptors
+
+1. **Create an Interceptor Service**: Implement the `HttpInterceptor` interface in a service.
+2. **Register the Interceptor**: Provide the interceptor in the `providers` array of an Angular module.
+
+### Steps to Create and Use an Angular Interceptor
+
+#### 1. Create an Interceptor Service
+
+First, generate a new service:
+
+```bash
+ng generate service auth-interceptor
+```
+
+Then, implement the `HttpInterceptor` interface in the generated service:
+
+```typescript
+// Import the Injectable decorator from Angular's core package.
+// This allows us to define a service that can be injected into other parts of the application.
+import { Injectable } from '@angular/core'
+
+// Import necessary classes from Angular's common HTTP package.
+// HttpInterceptor: Interface that defines an interceptor for HTTP requests.
+// HttpRequest: Represents an outgoing HTTP request, including URL, headers, and body.
+// HttpHandler: Handles an HttpRequest and returns an Observable of HttpEvent.
+// HttpEvent: Represents an event that occurs during an HTTP request, such as the response.
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http'
+
+// Import the Observable class from RxJS.
+// Observable: A class that allows us to work with asynchronous data streams.
+import { Observable } from 'rxjs'
+
+// Use the Injectable decorator to make this class a service that can be injected into other parts of the application.
+@Injectable()
+export class AuthInterceptor implements HttpInterceptor {
+
+    // Implement the intercept method from the HttpInterceptor interface.
+    // This method is called automatically for each outgoing HTTP request.
+    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
+        // Clone the original request to add a new Authorization header.
+        // Cloning ensures that we do not modify the original request.
+        // The new header contains a bearer token, which is often used for authentication.
+        const authReq = req.clone({
+            headers: req.headers.set('Authorization', 'Bearer YOUR_AUTH_TOKEN')
+        })
+
+        // Pass the cloned request (with the new header) to the next handler in the chain.
+        // This allows the request to continue to its intended destination with the added Authorization header.
+        return next.handle(authReq)
+    }
+}
+
+```
+
+#### 2. Register the Interceptor
+
+Open your module file, typically app.module.ts, and add the interceptor to the providers array:
+
+```typescript
+import { HTTP_INTERCEPTORS } from '@angular/common/http'
+import { AuthInterceptor } from './interceptors/auth.service'
+
+@NgModule({
+    declarations: [
+        // your components
+    ],
+    imports: [
+        // your modules
+    ],
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true
+        }
+    ],
+    bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
+
+## Explanation
+
+### Creating the Interceptor Service:
+
+- The `AuthInterceptor` class implements the `HttpInterceptor` interface
+- The `intercept` method takes two parameters: `req` (the outgoing request) and `next` (the next interceptor in the chain)
+- The `req.clone` method is used to clone the original request and modify it by adding an `Authorization` header
+- The modified request is passed to the `next.handle` method to continue the request chain
+
+### Registering the Interceptor:
+
+- The interceptor is provided in the `providers` array using the `HTTP_INTERCEPTORS` token
+- The `useClass` property specifies the interceptor class to use
+- The `multi: true` option allows multiple interceptors to be registered
+
+### Use Cases for Interceptors
+
+- **Authentication**: Add authentication tokens to requests
+- **Logging**: Log request and response details
+- **Error Handling**: Centralized error handling for HTTP requests
+- **Modifying Requests**: Modify request headers, URL, or body before sending the request
+- **Caching**: Implement caching mechanisms for HTTP requests
+
+By leveraging Angular interceptors, you can effectively manage and manipulate HTTP requests and responses, providing a centralized and reusable solution for common tasks in your application.
+
 
 ## 29. How do you use environment variables in Angular?
 
