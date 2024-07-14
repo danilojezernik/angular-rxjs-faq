@@ -992,6 +992,132 @@ By leveraging Angular interceptors, you can effectively manage and manipulate HT
 
 ## 27. How do you use environment variables in Angular?
 
+# Using Environment Variables in Angular
+
+In Angular, environment variables are used to store configuration settings that can change based on the environment (development, staging, production, etc.). This guide explains how to set up and use environment variables in an Angular project.
+
+## Step-by-Step Guide
+
+### 1. Create Environment Files
+
+Angular CLI generates two environment files by default:
+- `src/environments/environment.ts`
+- `src/environments/environment.prod.ts`
+
+You can add more files for different environments if needed, for example, `environment.<name-of-the-environment>.ts`.
+
+### 2. Define Environment Variables
+
+Open the environment files and define your variables. For example:
+
+```typescript
+// src/environments/environment.ts
+export const environment = {
+    production: false,
+    apiUrl: 'http://localhost:3000/api'
+}
+
+// src/environments/environment.prod.ts
+export const environment = {
+    production: true,
+    apiUrl: 'https://api.yourdomain.com'
+}
+```
+
+### 3. Add Environment Configuration to Angular CLI:
+In `angular.json`, configure the file replacements based on the environment. This tells Angular CLI to replace the default environment file with the appropriate one during the build process.
+
+```json
+{
+  ...
+  "projects": {
+    "your-app-name": {
+      ...
+      "architect": {
+        "build": {
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ]
+            },
+            "<name-of-the-environment>": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.<name-of-the-environment>.ts"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+### 4. Use Environment Variables in Your Code:
+Import the environment object into your Angular components or services to use the environment variables.
+
+```typescript
+import { Component, OnInit } from '@angular/core'
+import { environment } from '../environments/environment'
+
+@Component({
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
+})
+export class AppComponent implements OnInit {
+    apiUrl: string = environment.apiUrl
+
+    ngOnInit() {
+        console.log('API URL:', this.apiUrl)
+    }
+}
+```
+
+### 5. Add script to package.json
+
+Add a script to your `package.json` file to set the environment variable before running the Angular CLI commands.
+
+```json
+{
+  ...
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "prod": "ng serve --configuration=production",
+    "build": "ng build",
+    "test": "ng test",
+    "lint": "ng lint",
+    ...
+  },
+```
+
+### 6. Build the Application:
+Build your application using the Angular CLI command for the specific environment:
+
+```bash
+ng build --configuration=production
+ng build --configuration=<name-of-the-environment>
+```
+
+### Example
+Suppose you have a development, staging, and production environment. You would create three files in the `src/environments` directory:
+
+- `environment.ts` (for development)
+- `environment.<name-of-the-environment>.ts `
+- `environment.prod.ts`
+
+Define the environment variables in each file, then configure the file replacements in `angular.json` under the `build` section. Finally, use the environment object in your code to access the variables.
+
+This setup allows you to manage different configurations for different environments efficiently, ensuring that the correct settings are used during the build process.
+
 ## 28. What is AOT (Ahead-Of-Time) compilation in Angular? Explain the difference between AOT (Ahead-Of-Time) and JIT (Just-In-Time) compilation.
 
 **AOT** (Ahead-Of-Time) compilation is a feature in Angular that compiles your Angular application and its templates
