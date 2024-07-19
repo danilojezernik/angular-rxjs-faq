@@ -1,5 +1,3 @@
-## 30. How do you handle component communication in Angular?
-## 31. What is the purpose of the ng-content directive?
 ## 32. How do you use the Renderer2 service in Angular?
 ## 33. What is Angular Ivy? How does it improve the Angular framework?
 ## 34. How do you test an Angular application?
