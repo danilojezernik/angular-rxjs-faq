@@ -28,6 +28,7 @@
 28. What is AOT (Ahead-Of-Time) compilation in Angular? Explain the difference between AOT (Ahead-Of-Time) and JIT (Just-In-Time) compilation.
 29. Explain the role of the ngOnInit lifecycle hook and when to use it and when not to use it and why? What are the different lifecycle hooks in Angular?
 30. How do you use the Renderer2 service in Angular?
+31. How do you use ELementRef in Angular and what is the difference between Renderer2 and ElementRef
 31. What is Angular Ivy? How does it improve the Angular framework?
 32. How do you test an Angular application?
 33. What are the best practices for structuring an Angular project?
