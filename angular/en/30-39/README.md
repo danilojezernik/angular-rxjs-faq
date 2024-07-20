@@ -525,8 +525,8 @@ ng generate module my-module
 ### 2. Modular Architecture
 
 **Feature Modules**: Divide your application into feature modules. Each feature module should contain related
-components,
-services, and other code. This promotes separation of concerns and makes it easier to manage and develop each part of
+components, services, and other code. This promotes separation of concerns and makes it easier to manage and develop
+each part of
 the application.
 
 ```plaintxt
@@ -696,7 +696,8 @@ src/environments/
 
 ### 13. Code Consistency
 
-**Linting and Formatting**: Use tools like ESLint and Prettier to maintain code consistency and style across the project.
+**Linting and Formatting**: Use tools like ESLint and Prettier to maintain code consistency and style across the
+project.
 
 ```shell
 ng add @angular-eslint/schematics
@@ -715,8 +716,435 @@ ng add @angular-eslint/schematics
 
 ## 35. Explain the purpose of Angular decorators.
 
+In Angular, decorators are a special kind of declaration that can be attached to a class, method, accessor, property, or
+parameter. They provide a way to add metadata to these entities, which Angular uses to understand how to treat them.
+Decorators play a crucial role in Angular applications by enabling the following functionalities:
+
+### 1. Metadata for Classes
+
+**@Component**: Defines a component and provides metadata about the component, such as its template, styles, and
+selector.
+
+```typescript
+@Component({
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+    title = 'my-app'
+}
+```
+
+**@Directive**: Declares a directive and provides metadata, including the directive’s selector.
+
+```typescript
+@Directive({
+    selector: '[appHighlight]'
+})
+export class HighlightDirective {
+    // Directive logic
+}
+```
+
+**@Pipe**: Declares a pipe and provides metadata about the pipe, such as its name.
+
+```typescript
+@Pipe({
+    name: 'customPipe'
+})
+export class CustomPipe implements PipeTransform {
+    transform(value: any): any {
+        // Pipe logic
+    }
+}
+```
+
+**@Injectable**: Marks a class as available to be provided and injected as a dependency.
+
+```typescript
+@Injectable({
+    providedIn: 'root'
+})
+export class DataService {
+    // Service logic
+}
+```
+
+### 2. Metadata for Methods and Properties
+
+**@Input**: Declares an input property in a component to receive data from a parent component.
+
+```typescript
+@Component({
+    selector: 'child-component',
+    template: `<p>{{data}}</p>`
+})
+export class ChildComponent {
+    @Input() data: string
+}
+```
+
+**@Output**: Declares an output property in a component to emit events to a parent component.
+
+```typescript
+@Component({
+    selector: 'child-component',
+    template: `<button (click)="notifyParent()">Click me</button>`
+})
+export class ChildComponent {
+    @Output() notify = new EventEmitter<string>()
+
+    notifyParent() {
+        this.notify.emit('Some data')
+    }
+}
+```
+
+**@HostListener**: Binds a method to a host element event.
+
+```typescript
+@Directive({
+    selector: '[appHighlight]'
+})
+export class HighlightDirective {
+    @HostListener('mouseenter') onMouseEnter() {
+        // Handle mouse enter
+    }
+
+    @HostListener('mouseleave') onMouseLeave() {
+        // Handle mouse leave
+    }
+}
+```
+
+**@HostBinding**: Binds a property to a host element property.
+
+```typescript
+@Directive({
+    selector: '[appHighlight]'
+})
+export class HighlightDirective {
+    @HostBinding('style.backgroundColor') backgroundColor: string
+
+    @HostListener('mouseenter') onMouseEnter() {
+        this.backgroundColor = 'yellow'
+    }
+
+    @HostListener('mouseleave') onMouseLeave() {
+        this.backgroundColor = 'white'
+    }
+}
+```
+
+### 3. Dependency Injection
+
+**@Inject**: Specifies a custom provider to be injected.
+
+```typescript
+export class AppComponent {
+    constructor(@Inject(SomeService) private service: SomeService) {
+        // Component logic
+    }
+}
+```
+
+### Summary
+
+Angular decorators are essential for defining and configuring Angular applications. They allow developers to add
+metadata to classes, methods, properties, and parameters, which Angular uses to provide various features like component
+declaration, dependency injection, event handling, and more. By understanding and utilizing these decorators, developers
+can effectively build and manage Angular applications.
+
 ## 36. How do you handle state management in Angular applications?
 
+State management in Angular applications involves maintaining and updating the state of the application in a predictable
+and efficient manner. There are several approaches to handle state management in Angular, including services,
+component-based state management, and using state management libraries like NgRx and Akita. Below are the key methods
+for managing state in Angular applications:
+
+### 1. Using Services
+
+Services in Angular are a fundamental way to manage state. They provide a centralized place to store and manage data
+that can be shared across multiple components.
+
+#### Example:
+
+#### 1. Create a Service:
+
+```typescript
+import {Injectable} from '@angular/core'
+
+@Injectable({
+    providedIn: 'root'
+})
+export class StateService {
+    private data: any = {}
+
+    setData(key: string, value: any) {
+        this.data[key] = value
+    }
+
+    getData(key: string) {
+        return this.data[key]
+    }
+}
+```
+
+#### 2. Use the Service in Components:
+
+```typescript
+import {Component} from '@angular/core'
+import {StateService} from './state.service'
+
+@Component({
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+    constructor(private stateService: StateService) {
+    }
+
+    setData() {
+        this.stateService.setData('exampleKey', 'exampleValue')
+    }
+
+    getData() {
+        console.log(this.stateService.getData('exampleKey'))
+    }
+}
+```
+
+### 2. Component-Based State Management
+
+State can also be managed locally within components, especially for small to medium-sized applications where the state
+does not need to be shared globally.
+
+#### Example:
+
+#### 1. Parent Component:
+
+```typescript
+import {Component} from '@angular/core'
+
+@Component({
+    selector: 'app-parent',
+    template: `
+    <app-child [data]="parentData" (update)="handleUpdate($event)"></app-child>
+  `
+})
+export class ParentComponent {
+    parentData = 'initial data'
+
+    handleUpdate(newData: string) {
+        this.parentData = newData
+    }
+}
+```
+
+#### 2. Child Component:
+
+```typescript
+import {Component, Input, Output, EventEmitter} from '@angular/core'
+
+@Component({
+    selector: 'app-child',
+    template: `
+    <div>{{ data }}</div>
+    <button (click)="updateData()">Update Data</button>
+  `
+})
+export class ChildComponent {
+    @Input() data: string
+    @Output() update = new EventEmitter<string>()
+
+    updateData() {
+        this.update.emit('updated data')
+    }
+}
+```
+
+### 3. Using NgRx
+
+NgRx is a popular state management library for Angular applications that follows the Redux pattern. It provides a way to
+manage state using actions, reducers, and effects.
+
+#### Example:
+
+#### 1. Install NgRx:
+
+```shell
+ng add @ngrx/store @ngrx/effects @ngrx/store-devtools
+```
+
+#### 2. Define State and Actions:
+
+```typescript
+// actions.ts
+import {createAction, props} from '@ngrx/store'
+
+export const setData = createAction(
+    '[State] Set Data',
+    props<{ key: string, value: any }>()
+)
+
+export const getData = createAction(
+    '[State] Get Data',
+    props<{ key: string }>()
+)
+```
+
+#### 3. Create Reducer:
+
+```shell
+// reducer.ts
+import { createReducer, on } from '@ngrx/store'
+import { setData } from './actions'
+
+export const initialState = {}
+
+const _stateReducer = createReducer(
+  initialState,
+  on(setData, (state, { key, value }) => ({ ...state, [key]: value }))
+)
+
+export function stateReducer(state, action) {
+  return _stateReducer(state, action)
+}
+```
+
+#### 4. Configure Store:
+
+```typescript
+// app.module.ts
+import {NgModule} from '@angular/core'
+import {BrowserModule} from '@angular/platform-browser'
+import {StoreModule} from '@ngrx/store'
+import {stateReducer} from './reducer'
+
+@NgModule({
+    declarations: [AppComponent],
+    imports: [
+        BrowserModule,
+        StoreModule.forRoot({state: stateReducer})
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
+})
+export class AppModule {
+}
+```
+
+#### 5. Use Store in Components:
+
+```typescript
+import {Component} from '@angular/core'
+import {Store} from '@ngrx/store'
+import {setData} from './actions'
+
+@Component({
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+    constructor(private store: Store<{ state: any }>) {
+    }
+
+    setData() {
+        this.store.dispatch(setData({key: 'exampleKey', value: 'exampleValue'}))
+    }
+}
+```
+
+### 4. Using Akita
+
+Akita is another state management library for Angular applications that provides a simple and scalable way to manage
+state.
+
+#### Example:
+
+#### 1. Install Akita:
+
+```shell
+ng add @datorama/akita
+```
+
+#### 2. Create State Store:
+
+```typescript
+// store.ts
+import {Store, StoreConfig} from '@datorama/akita'
+
+export interface State {
+    key: string
+    value: any
+}
+
+@StoreConfig({name: 'state'})
+export class StateStore extends Store<State> {
+    constructor() {
+        super({key: '', value: null})
+    }
+}
+```
+
+#### 3. Use Store in Components:
+
+```typescript
+import {Component} from '@angular/core'
+import {StateStore} from './store'
+
+@Component({
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+    constructor(private stateStore: StateStore) {
+    }
+
+    setData() {
+        this.stateStore.update({key: 'exampleKey', value: 'exampleValue'})
+    }
+}
+```
+
+### Summary
+
+Managing state in Angular applications can be achieved using various approaches. For simpler cases, services or
+component-based state management can be sufficient. For more complex applications, libraries like NgRx and Akita offer
+robust solutions for managing state in a scalable and maintainable way. Choosing the right approach depends on the
+specific requirements and complexity of the application.
+
 ## 37. What is the purpose of the APP_INITIALIZER token in Angular?
+
+The `APP_INITIALIZER` token in Angular is a special injection token used to execute a function or a set of functions
+during the application initialization process, before the Angular app is fully bootstrapped. It allows developers to
+perform essential setup tasks that must be completed before the application becomes operational. This is particularly
+useful for loading configuration settings, initializing services, or performing any asynchronous operations required to
+get the application into a ready state.
+
+#### Key Features:
+#### 1. Asynchronous Initialization:
+
+It supports asynchronous operations by allowing the use of Promises or Observables. The application initialization will
+wait until these asynchronous operations are complete before proceeding with the bootstrapping process.
+
+#### 2. Configuration Loading:
+
+Commonly used to load configuration files or settings from a remote server before the application starts. This ensures
+that the application has all the necessary configurations available.
+
+#### 3. Service Initialization:
+
+Can be used to perform initialization tasks for services, such as setting up initial states, making necessary API calls,
+or performing any setup logic required for the services to function correctly.
+
+#### 4. Pre-Bootstrapping Tasks:
+
+Any task that needs to be completed before the Angular application is fully initialized and available to the user can be
+placed within an `APP_INITIALIZER` function.
 
 ## 38. What is a feature module in Angular, and how do you use it?
